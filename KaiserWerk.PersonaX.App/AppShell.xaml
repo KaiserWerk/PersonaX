@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="KaiserWerk.PersonaX.App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:KaiserWerk.PersonaX.App.Views"
+    Shell.FlyoutBehavior="Flyout"
+    Title="KaiserWerk.PersonaX.App">
+
+    <Shell.FlyoutHeader>
+        <Grid>
+            <Label Text="HEADER" />
+            <Image Source="header-image.png" />
+        </Grid>
+    </Shell.FlyoutHeader>
+    
+    <FlyoutItem Title="Person Database">
+        <Tab>
+            <ShellContent Title="Home" ContentTemplate="{DataTemplate views:AllPersonsPage}" Route="AllPersons" />
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Title="Capture Media">
+        <Tab>
+            <ShellContent Title="Capture Media" ContentTemplate="{DataTemplate views:CaptureMediaPage}" Route="CaptureMedia" />
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Title="User Settings">
+        <Tab>
+            <ShellContent Title="User Settings" ContentTemplate="{DataTemplate views:UserSettingsPage}" Route="UserSettings" />
+        </Tab>
+    </FlyoutItem>
+
+    <!--<MenuItem Text="About" />-->
+
+    <Shell.FlyoutFooter>
+        <Grid>
+            <Label Text="FOOTER" />
+            <Image Source="footer-image.png" />
+        </Grid>
+    </Shell.FlyoutFooter>
+    
+</Shell>

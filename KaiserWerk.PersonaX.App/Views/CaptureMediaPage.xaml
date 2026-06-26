@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="KaiserWerk.PersonaX.App.Views.CaptureMediaPage"
+             xmlns:vm="clr-namespace:KaiserWerk.PersonaX.App.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Capture Media">
+
+    <VerticalStackLayout>
+        <HorizontalStackLayout>
+            <Label Text="Capturing media for entry " />
+            <Label Text="{Binding Path=PersonId}" />
+        </HorizontalStackLayout>
+        <Button Margin="5" Text="Capture Photo" Command="{Binding Path=CapturePhotoCommand}" />
+        <Button Margin="5" Text="Capture Video" Command="{Binding Path=CaptureVideoCommand}" />
+    </VerticalStackLayout>
+    
+</ContentPage>

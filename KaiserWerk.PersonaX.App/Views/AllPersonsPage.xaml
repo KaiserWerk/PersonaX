@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="KaiserWerk.PersonaX.App.Views.AllPersonsPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:KaiserWerk.PersonaX.App.ViewModels"
+             xmlns:models="clr-namespace:KaiserWerk.PersonaX.Persistence.Models;assembly=KaiserWerk.PersonaX.Persistence">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing" Command="{Binding Path=LoadDataCommand}" />
+    </ContentPage.Behaviors>
+    
+    <Grid>
+
+        <CollectionView ItemsSource="{Binding Path=AllPersons}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type models:Person}">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="Red"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AllPersonsViewModel}}, Path=DeleteCommand}"
+                                           CommandParameter="{Binding}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid>
+                            <Frame>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AllPersonsViewModel}}, Path=ShowDetailsCommand}"
+                                           CommandParameter="{Binding}"/>
+                                </Frame.GestureRecognizers>
+                                <Grid RowDefinitions="*,*" ColumnDefinitions="*,*,*">
+                                    <Label Grid.Row="0" Grid.Column="0" Text="{Binding Path=Firstname}" />
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Path=Lastname}" />
+                                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding Path=BirthDate, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ., Converter={StaticResource PersonAddressConverter}}" />
+                                </Grid>
+                            </Frame>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

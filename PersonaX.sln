@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaiserWerk.PersonaX.App", "KaiserWerk.PersonaX.App\KaiserWerk.PersonaX.App.csproj", "{B02AC68B-FBB1-4953-96A7-AEC128703CBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaiserWerk.PersonaX.Core", "KaiserWerk.PersonaX.Core\KaiserWerk.PersonaX.Core.csproj", "{38410610-D4BF-45B5-BEC3-9FF5FFCAD7F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaiserWerk.PersonaX.Persistence", "KaiserWerk.PersonaX.Persistence\KaiserWerk.PersonaX.Persistence.csproj", "{89FCA458-EC39-4FFA-9D17-ABD26C10B510}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{421210A1-87AA-4F32-9291-5300742313BC}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B02AC68B-FBB1-4953-96A7-AEC128703CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B02AC68B-FBB1-4953-96A7-AEC128703CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B02AC68B-FBB1-4953-96A7-AEC128703CBF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B02AC68B-FBB1-4953-96A7-AEC128703CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B02AC68B-FBB1-4953-96A7-AEC128703CBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B02AC68B-FBB1-4953-96A7-AEC128703CBF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{38410610-D4BF-45B5-BEC3-9FF5FFCAD7F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38410610-D4BF-45B5-BEC3-9FF5FFCAD7F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38410610-D4BF-45B5-BEC3-9FF5FFCAD7F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38410610-D4BF-45B5-BEC3-9FF5FFCAD7F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89FCA458-EC39-4FFA-9D17-ABD26C10B510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89FCA458-EC39-4FFA-9D17-ABD26C10B510}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89FCA458-EC39-4FFA-9D17-ABD26C10B510}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89FCA458-EC39-4FFA-9D17-ABD26C10B510}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3A4F2D7-89F5-4C05-8883-0C6D9463899E}
+	EndGlobalSection
+EndGlobal

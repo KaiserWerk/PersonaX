@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>PersonaX benötigt Kamerazugriff zum Aufnehmen von Fotos und Videos für Personenprofile.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>PersonaX benötigt Mikrofonzugriff für zukünftige Audio- und Videoaufnahmen.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PersonaX benötigt Zugriff auf Fotos, um Medien sicher importieren zu können.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>PersonaX benötigt Zugriff, um exportierte oder bearbeitete Medien in der Fotomediathek abzulegen.</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/appicon.appiconset</string>
+</dict>
+</plist>

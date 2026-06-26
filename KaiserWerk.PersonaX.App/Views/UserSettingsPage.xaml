@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="KaiserWerk.PersonaX.App.Views.UserSettingsPage"
+             Title="User Settings">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="1*,2*">
+        <Label Grid.Row="0" Grid.Column="0" Text="Download the database file:" />
+        <Button Text="Download" Command="{Binding DownloadDbFileCommand}" />
+    </Grid>
+</ContentPage>
