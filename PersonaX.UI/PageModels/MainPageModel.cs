@@ -120,7 +120,7 @@ namespace PersonaX.UI.PageModels
         }
 
         [RelayCommand]
-        private void NavigatedTo() =>
+        private void NavigatedTo()
         {
             _lockService.NotifyUserActivity();
             _isNavigatedTo = true;

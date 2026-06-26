@@ -6,35 +6,54 @@ using PersonaX.UI.Services;
 
 namespace PersonaX.UI.PageModels
 {
-    public partial class PeopleListPageModel : ObservableObject
+    public class PeopleListPageModel : ObservableObject
     {
         private readonly PeopleRepository _peopleRepository;
         private readonly ILockService _lockService;
-
-        [ObservableProperty]
         private List<Person> _people = [];
-
-        [ObservableProperty]
         private Person? _selectedPerson;
+        private bool _isRefreshing;
 
-        [ObservableProperty]
-        private bool _isRefreshing = false;
+        public List<Person> People
+        {
+            get => _people;
+            set => SetProperty(ref _people, value);
+        }
+
+        public Person? SelectedPerson
+        {
+            get => _selectedPerson;
+            set => SetProperty(ref _selectedPerson, value);
+        }
+
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+
+        public IAsyncRelayCommand AppearingCommand { get; }
+        public IAsyncRelayCommand RefreshCommand { get; }
+        public IAsyncRelayCommand AddPersonCommand { get; }
+        public IAsyncRelayCommand<Person> NavigateToPersonCommand { get; }
 
         public PeopleListPageModel(PeopleRepository peopleRepository, ILockService lockService)
         {
             _peopleRepository = peopleRepository;
             _lockService = lockService;
+            AppearingCommand = new AsyncRelayCommand(AppearingAsync);
+            RefreshCommand = new AsyncRelayCommand(RefreshAsync);
+            AddPersonCommand = new AsyncRelayCommand(AddPersonAsync);
+            NavigateToPersonCommand = new AsyncRelayCommand<Person>(NavigateToPersonAsync);
         }
 
-        [RelayCommand]
-        private async Task Appearing()
+        private async Task AppearingAsync()
         {
             _lockService.NotifyUserActivity();
             await LoadPeople();
         }
 
-        [RelayCommand]
-        private async Task Refresh()
+        private async Task RefreshAsync()
         {
             _lockService.NotifyUserActivity();
             try
@@ -48,15 +67,13 @@ namespace PersonaX.UI.PageModels
             }
         }
 
-        [RelayCommand]
-        private async Task AddPerson()
+        private async Task AddPersonAsync()
         {
             _lockService.NotifyUserActivity();
             await Shell.Current.GoToAsync("PersonDetail");
         }
 
-        [RelayCommand]
-        private async Task NavigateToPerson(Person person)
+        private async Task NavigateToPersonAsync(Person? person)
         {
             if (person == null)
                 return;

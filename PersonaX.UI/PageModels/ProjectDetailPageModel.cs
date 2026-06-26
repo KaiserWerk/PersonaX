@@ -263,7 +263,7 @@ namespace PersonaX.UI.PageModels
         }
 
         [RelayCommand]
-        private Task NavigateToTask(ProjectTask task) =>
+        private Task NavigateToTask(ProjectTask task)
         {
             _lockService.NotifyUserActivity();
             return Shell.Current.GoToAsync($"task?id={task.ID}");

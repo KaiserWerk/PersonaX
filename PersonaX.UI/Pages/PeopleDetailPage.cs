@@ -1,0 +1,68 @@
+namespace PersonaX.UI.Pages
+{
+    public class PeopleDetailPage : ContentPage
+    {
+        private readonly PageModels.PeopleDetailPageModel _model;
+
+        public PeopleDetailPage(PageModels.PeopleDetailPageModel model)
+        {
+            _model = model;
+            BindingContext = model;
+            Title = "Person";
+
+            ToolbarItems.Add(new ToolbarItem
+            {
+                Text = "Delete",
+                Command = _model.DeleteCommand
+            });
+
+            var firstNameEntry = new Entry { Placeholder = "First name" };
+            firstNameEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.FirstName));
+
+            var lastNameEntry = new Entry { Placeholder = "Last name" };
+            lastNameEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.LastName));
+
+            var emailEntry = new Entry { Placeholder = "Email", Keyboard = Keyboard.Email };
+            emailEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.Email));
+
+            var phoneEntry = new Entry { Placeholder = "Phone number", Keyboard = Keyboard.Telephone };
+            phoneEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.PhoneNumber));
+
+            var datePicker = new DatePicker();
+            datePicker.SetBinding(DatePicker.DateProperty, nameof(PageModels.PeopleDetailPageModel.DateOfBirth));
+
+            var notesEditor = new Editor { AutoSize = EditorAutoSizeOption.TextChanges, MinimumHeightRequest = 120 };
+            notesEditor.SetBinding(Editor.TextProperty, nameof(PageModels.PeopleDetailPageModel.Notes));
+
+            var saveButton = new Button { Text = "Save", MinimumHeightRequest = 44 };
+            saveButton.SetBinding(Button.CommandProperty, nameof(PageModels.PeopleDetailPageModel.SaveCommand));
+
+            Content = new ScrollView
+            {
+                Content = new VerticalStackLayout
+                {
+                    Padding = 16,
+                    Spacing = 12,
+                    Children =
+                    {
+                        firstNameEntry,
+                        lastNameEntry,
+                        emailEntry,
+                        phoneEntry,
+                        new Label { Text = "Date of birth" },
+                        datePicker,
+                        new Label { Text = "Notes" },
+                        notesEditor,
+                        saveButton
+                    }
+                }
+            };
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _model.AppearingCommand.Execute(null);
+        }
+    }
+}

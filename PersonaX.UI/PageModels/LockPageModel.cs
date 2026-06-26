@@ -4,39 +4,94 @@ using PersonaX.UI.Services;
 
 namespace PersonaX.UI.PageModels
 {
-    public partial class LockPageModel : ObservableObject
+    public class LockPageModel : ObservableObject
     {
         private readonly ILockService _lockService;
         private readonly IKeyStoreService _keyStoreService;
-
-        [ObservableProperty]
         private string _pin = string.Empty;
-
-        [ObservableProperty]
         private string _errorMessage = string.Empty;
-
-        [ObservableProperty]
-        private bool _isUnlocking = false;
-
-        [ObservableProperty]
-        private bool _showSetupMode = false;
-
-        [ObservableProperty]
+        private bool _isUnlocking;
+        private bool _showSetupMode;
         private string _confirmPin = string.Empty;
+        private int _failedAttempts;
 
-        [ObservableProperty]
-        private int _failedAttempts = 0;
+        public string Pin
+        {
+            get => _pin;
+            set => SetProperty(ref _pin, value);
+        }
+
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                if (SetProperty(ref _errorMessage, value))
+                {
+                    OnPropertyChanged(nameof(HasErrorMessage));
+                }
+            }
+        }
+
+        public bool IsUnlocking
+        {
+            get => _isUnlocking;
+            set
+            {
+                if (SetProperty(ref _isUnlocking, value))
+                {
+                    OnPropertyChanged(nameof(IsUnlockButtonEnabled));
+                }
+            }
+        }
+
+        public bool ShowSetupMode
+        {
+            get => _showSetupMode;
+            set
+            {
+                if (SetProperty(ref _showSetupMode, value))
+                {
+                    OnPropertyChanged(nameof(ShowUnlockMode));
+                    OnPropertyChanged(nameof(TitleText));
+                    OnPropertyChanged(nameof(PrimaryActionText));
+                }
+            }
+        }
+
+        public string ConfirmPin
+        {
+            get => _confirmPin;
+            set => SetProperty(ref _confirmPin, value);
+        }
+
+        public int FailedAttempts
+        {
+            get => _failedAttempts;
+            set => SetProperty(ref _failedAttempts, value);
+        }
+
+        public bool ShowUnlockMode => !ShowSetupMode;
+        public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
+        public bool IsUnlockButtonEnabled => !IsUnlocking;
+        public string TitleText => ShowSetupMode ? "Setup PIN" : "Enter PIN";
+        public string PrimaryActionText => ShowSetupMode ? "Create PIN" : "Unlock";
+
+        public IAsyncRelayCommand AppearingCommand { get; }
+        public IAsyncRelayCommand UnlockCommand { get; }
+        public IAsyncRelayCommand UnlockWithBiometricsCommand { get; }
 
         public LockPageModel(ILockService lockService, IKeyStoreService keyStoreService)
         {
             _lockService = lockService;
             _keyStoreService = keyStoreService;
+            AppearingCommand = new AsyncRelayCommand(AppearingAsync);
+            UnlockCommand = new AsyncRelayCommand(UnlockAsync);
+            UnlockWithBiometricsCommand = new AsyncRelayCommand(UnlockWithBiometricsAsync);
         }
 
-        [RelayCommand]
-        private async Task Appearing()
+        private async Task AppearingAsync()
         {
-            // Check if this is first-time setup
             ShowSetupMode = !await _keyStoreService.IsInitializedAsync();
             FailedAttempts = _lockService.FailedAttempts;
             ErrorMessage = string.Empty;
@@ -44,8 +99,7 @@ namespace PersonaX.UI.PageModels
             ConfirmPin = string.Empty;
         }
 
-        [RelayCommand]
-        private async Task Unlock()
+        private async Task UnlockAsync()
         {
             if (IsUnlocking)
                 return;
@@ -105,8 +159,7 @@ namespace PersonaX.UI.PageModels
             }
         }
 
-        [RelayCommand]
-        private async Task UnlockWithBiometrics()
+        private async Task UnlockWithBiometricsAsync()
         {
             if (!await _keyStoreService.IsBiometricsAvailableAsync())
             {

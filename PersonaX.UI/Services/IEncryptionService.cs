@@ -1,5 +1,7 @@
 namespace PersonaX.UI.Services
 {
+    public sealed record EncryptedPayload(byte[] Ciphertext, byte[] Iv, byte[] Tag);
+
     /// <summary>
     /// Service for cryptographic operations including key derivation and AES-GCM encryption.
     /// </summary>
@@ -43,7 +45,7 @@ namespace PersonaX.UI.Services
         /// <summary>
         /// Encrypts a file stream using AES-GCM.
         /// </summary>
-        Task EncryptFileAsync(Stream input, Stream output, byte[] key, out byte[] iv, out byte[] tag);
+        Task<EncryptedPayload> EncryptFileAsync(Stream input, byte[] key);
 
         /// <summary>
         /// Decrypts a file stream using AES-GCM.

@@ -6,39 +6,73 @@ using PersonaX.UI.Services;
 
 namespace PersonaX.UI.PageModels
 {
-    public partial class PeopleDetailPageModel : ObservableObject, IQueryAttributable
+    public class PeopleDetailPageModel : ObservableObject, IQueryAttributable
     {
         private readonly PeopleRepository _peopleRepository;
         private readonly ILockService _lockService;
         private Person? _person;
-
-        [ObservableProperty]
         private string _firstName = string.Empty;
-
-        [ObservableProperty]
         private string _lastName = string.Empty;
-
-        [ObservableProperty]
         private string _email = string.Empty;
-
-        [ObservableProperty]
         private string _phoneNumber = string.Empty;
-
-        [ObservableProperty]
         private DateTime _dateOfBirth = DateTime.Today;
-
-        [ObservableProperty]
         private string _notes = string.Empty;
-
-        [ObservableProperty]
         private bool _isBusy;
 
+        public string FirstName
+        {
+            get => _firstName;
+            set => SetProperty(ref _firstName, value);
+        }
+
+        public string LastName
+        {
+            get => _lastName;
+            set => SetProperty(ref _lastName, value);
+        }
+
+        public string Email
+        {
+            get => _email;
+            set => SetProperty(ref _email, value);
+        }
+
+        public string PhoneNumber
+        {
+            get => _phoneNumber;
+            set => SetProperty(ref _phoneNumber, value);
+        }
+
+        public DateTime DateOfBirth
+        {
+            get => _dateOfBirth;
+            set => SetProperty(ref _dateOfBirth, value);
+        }
+
+        public string Notes
+        {
+            get => _notes;
+            set => SetProperty(ref _notes, value);
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
+        }
+
         public bool CanDelete => _person is not null && _person.ID != 0;
+        public IRelayCommand AppearingCommand { get; }
+        public IAsyncRelayCommand SaveCommand { get; }
+        public IAsyncRelayCommand DeleteCommand { get; }
 
         public PeopleDetailPageModel(PeopleRepository peopleRepository, ILockService lockService)
         {
             _peopleRepository = peopleRepository;
             _lockService = lockService;
+            AppearingCommand = new RelayCommand(Appearing);
+            SaveCommand = new AsyncRelayCommand(SaveAsync);
+            DeleteCommand = new AsyncRelayCommand(DeleteAsync, () => CanDelete);
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -58,17 +92,16 @@ namespace PersonaX.UI.PageModels
             PhoneNumber = string.Empty;
             DateOfBirth = DateTime.Today;
             Notes = string.Empty;
+                DeleteCommand.NotifyCanExecuteChanged();
             OnPropertyChanged(nameof(CanDelete));
         }
 
-        [RelayCommand]
         private void Appearing()
         {
             _lockService.NotifyUserActivity();
         }
 
-        [RelayCommand]
-        private async Task Save()
+        private async Task SaveAsync()
         {
             _lockService.NotifyUserActivity();
 
@@ -91,8 +124,7 @@ namespace PersonaX.UI.PageModels
             await Shell.Current.GoToAsync("..");
         }
 
-        [RelayCommand(CanExecute = nameof(CanDelete))]
-        private async Task Delete()
+        private async Task DeleteAsync()
         {
             _lockService.NotifyUserActivity();
 

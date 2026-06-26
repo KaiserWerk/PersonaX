@@ -78,10 +78,9 @@ namespace PersonaX.UI.Services
             return plaintext;
         }
 
-        public async Task EncryptFileAsync(Stream input, Stream output, byte[] key, out byte[] iv, out byte[] tag)
+        public async Task<EncryptedPayload> EncryptFileAsync(Stream input, byte[] key)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
-            if (output == null) throw new ArgumentNullException(nameof(output));
             if (key == null || key.Length != AesKeySize)
                 throw new ArgumentException("Key must be 32 bytes", nameof(key));
 
@@ -91,12 +90,7 @@ namespace PersonaX.UI.Services
             var plaintext = ms.ToArray();
 
             var (ciphertext, ivResult, tagResult) = EncryptAesGcm(plaintext, key);
-
-            await output.WriteAsync(ciphertext);
-            await output.FlushAsync();
-
-            iv = ivResult;
-            tag = tagResult;
+            return new EncryptedPayload(ciphertext, ivResult, tagResult);
         }
 
         public async Task DecryptFileAsync(Stream input, Stream output, byte[] key, byte[] iv, byte[] tag)
