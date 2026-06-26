@@ -1,0 +1,202 @@
+﻿using System.Text;
+
+namespace PersonaX.UI.Services
+{
+    /// <summary>
+    /// Service for secure key storage using MAUI SecureStorage and optional biometrics.
+    /// Manages PIN-based authentication and master key lifecycle.
+    /// </summary>
+    public class KeyStoreService : IKeyStoreService
+    {
+        private const string SaltKey = "pii_salt";
+        private const string WrappedKeyKey = "pii_wrapped_key";
+        private const string BiometricsEnabledKey = "pii_biometrics_enabled";
+        private const string InitializedKey = "pii_initialized";
+
+        private readonly IEncryptionService _encryptionService;
+        private byte[]? _masterKeyInMemory;
+
+        public KeyStoreService(IEncryptionService encryptionService)
+        {
+            _encryptionService = encryptionService;
+        }
+
+        public async Task<bool> IsInitializedAsync()
+        {
+            var initialized = await SecureStorage.GetAsync(InitializedKey);
+            return initialized == "true";
+        }
+
+        public async Task InitializeAsync(string pin)
+        {
+            if (string.IsNullOrEmpty(pin))
+                throw new ArgumentException("PIN cannot be empty", nameof(pin));
+
+            if (await IsInitializedAsync())
+                throw new InvalidOperationException("KeyStore is already initialized");
+
+            // Generate a random salt
+            var salt = _encryptionService.GenerateSalt(16);
+
+            // Derive master key from PIN
+            var masterKey = _encryptionService.DeriveMasterKeyFromPin(pin, salt);
+
+            // For additional security, we could encrypt the master key with a device-specific key
+            // For now, we store it wrapped by the PIN-derived key itself (self-encrypted)
+            var wrappedKey = WrapKey(masterKey, pin, salt);
+
+            // Store salt and wrapped key in SecureStorage
+            await SecureStorage.SetAsync(SaltKey, Convert.ToBase64String(salt));
+            await SecureStorage.SetAsync(WrappedKeyKey, Convert.ToBase64String(wrappedKey));
+            await SecureStorage.SetAsync(InitializedKey, "true");
+
+            // Keep master key in memory for current session
+            _masterKeyInMemory = masterKey;
+        }
+
+        public async Task<bool> UnlockWithPinAsync(string pin)
+        {
+            if (!await IsInitializedAsync())
+                return false;
+
+            try
+            {
+                var saltBase64 = await SecureStorage.GetAsync(SaltKey);
+                var wrappedKeyBase64 = await SecureStorage.GetAsync(WrappedKeyKey);
+
+                if (string.IsNullOrEmpty(saltBase64) || string.IsNullOrEmpty(wrappedKeyBase64))
+                    return false;
+
+                var salt = Convert.FromBase64String(saltBase64);
+                var wrappedKey = Convert.FromBase64String(wrappedKeyBase64);
+
+                // Derive master key from provided PIN
+                var masterKey = _encryptionService.DeriveMasterKeyFromPin(pin, salt);
+
+                // Attempt to unwrap the stored key
+                var unwrappedKey = UnwrapKey(wrappedKey, pin, salt);
+
+                // Verify unwrapped key matches derived key
+                if (!masterKey.SequenceEqual(unwrappedKey))
+                    return false;
+
+                // Success - store in memory
+                _masterKeyInMemory = masterKey;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UnlockWithBiometricsAsync()
+        {
+            // Check if biometrics is enabled
+            var enabled = await SecureStorage.GetAsync(BiometricsEnabledKey);
+            if (enabled != "true")
+                return false;
+
+            // TODO: Implement platform-specific biometric authentication
+            // For Android: AndroidX.Biometric.BiometricPrompt
+            // For iOS: LocalAuthentication.LAContext
+            // This is a placeholder for now
+
+            await Task.CompletedTask;
+            return false; // Not implemented yet
+        }
+
+        public Task LockAsync()
+        {
+            // Clear master key from memory
+            if (_masterKeyInMemory != null)
+            {
+                Array.Clear(_masterKeyInMemory, 0, _masterKeyInMemory.Length);
+                _masterKeyInMemory = null;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task<string?> GetDatabasePasswordAsync()
+        {
+            if (_masterKeyInMemory == null)
+                return Task.FromResult<string?>(null);
+
+            // Derive database password from master key
+            var dbKey = _encryptionService.DeriveSubKey(_masterKeyInMemory, "database");
+
+            // Convert to hex string for SQLCipher PRAGMA key
+            var hexPassword = BitConverter.ToString(dbKey).Replace("-", "").ToLowerInvariant();
+
+            return Task.FromResult<string?>(hexPassword);
+        }
+
+        public Task<byte[]?> GetFileEncryptionKeyAsync()
+        {
+            if (_masterKeyInMemory == null)
+                return Task.FromResult<byte[]?>(null);
+
+            // Derive file encryption key from master key
+            var fileKey = _encryptionService.DeriveSubKey(_masterKeyInMemory, "file");
+
+            return Task.FromResult<byte[]?>(fileKey);
+        }
+
+        public Task<bool> IsBiometricsAvailableAsync()
+        {
+            // TODO: Check platform capabilities
+            // For now, return false
+            return Task.FromResult(false);
+        }
+
+        public async Task SetBiometricsEnabledAsync(bool enabled)
+        {
+            if (enabled && !await IsBiometricsAvailableAsync())
+                throw new InvalidOperationException("Biometric authentication is not available on this device");
+
+            await SecureStorage.SetAsync(BiometricsEnabledKey, enabled ? "true" : "false");
+        }
+
+        /// <summary>
+        /// Wraps (encrypts) the master key using PIN-derived key.
+        /// This provides an additional layer of protection.
+        /// </summary>
+        private byte[] WrapKey(byte[] masterKey, string pin, byte[] salt)
+        {
+            var wrappingKey = _encryptionService.DeriveMasterKeyFromPin(pin, salt);
+            var (ciphertext, iv, tag) = _encryptionService.EncryptAesGcm(masterKey, wrappingKey);
+
+            // Combine iv + tag + ciphertext
+            var wrapped = new byte[iv.Length + tag.Length + ciphertext.Length];
+            Buffer.BlockCopy(iv, 0, wrapped, 0, iv.Length);
+            Buffer.BlockCopy(tag, 0, wrapped, iv.Length, tag.Length);
+            Buffer.BlockCopy(ciphertext, 0, wrapped, iv.Length + tag.Length, ciphertext.Length);
+
+            return wrapped;
+        }
+
+        /// <summary>
+        /// Unwraps (decrypts) the master key using PIN-derived key.
+        /// </summary>
+        private byte[] UnwrapKey(byte[] wrappedKey, string pin, byte[] salt)
+        {
+            const int ivSize = 12;
+            const int tagSize = 16;
+
+            if (wrappedKey.Length < ivSize + tagSize)
+                throw new ArgumentException("Invalid wrapped key format");
+
+            var iv = new byte[ivSize];
+            var tag = new byte[tagSize];
+            var ciphertext = new byte[wrappedKey.Length - ivSize - tagSize];
+
+            Buffer.BlockCopy(wrappedKey, 0, iv, 0, ivSize);
+            Buffer.BlockCopy(wrappedKey, ivSize, tag, 0, tagSize);
+            Buffer.BlockCopy(wrappedKey, ivSize + tagSize, ciphertext, 0, ciphertext.Length);
+
+            var wrappingKey = _encryptionService.DeriveMasterKeyFromPin(pin, salt);
+            return _encryptionService.DecryptAesGcm(ciphertext, wrappingKey, iv, tag);
+        }
+    }
+}

@@ -1,0 +1,174 @@
+﻿namespace PersonaX.UI.Pages
+{
+    public class PeopleDetailPage : ContentPage
+    {
+        private readonly PageModels.PeopleDetailPageModel _model;
+
+        public PeopleDetailPage(PageModels.PeopleDetailPageModel model)
+        {
+            _model = model;
+            BindingContext = model;
+            Title = "Person";
+
+            ToolbarItems.Add(new ToolbarItem
+            {
+                Text = "Delete",
+                Command = _model.DeleteCommand
+            });
+
+            var firstNameEntry = new Entry { Placeholder = "First name" };
+            firstNameEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.FirstName));
+
+            var lastNameEntry = new Entry { Placeholder = "Last name" };
+            lastNameEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.LastName));
+
+            var emailEntry = new Entry { Placeholder = "Email", Keyboard = Keyboard.Email };
+            emailEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.Email));
+
+            var phoneEntry = new Entry { Placeholder = "Phone number", Keyboard = Keyboard.Telephone };
+            phoneEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.PhoneNumber));
+
+            var datePicker = new DatePicker();
+            datePicker.SetBinding(DatePicker.DateProperty, nameof(PageModels.PeopleDetailPageModel.DateOfBirth));
+
+            var notesEditor = new Editor { AutoSize = EditorAutoSizeOption.TextChanges, MinimumHeightRequest = 120 };
+            notesEditor.SetBinding(Editor.TextProperty, nameof(PageModels.PeopleDetailPageModel.Notes));
+
+            var streetEntry = new Entry { Placeholder = "Street" };
+            streetEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.Street));
+
+            var cityEntry = new Entry { Placeholder = "City" };
+            cityEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.City));
+
+            var stateEntry = new Entry { Placeholder = "State / Region" };
+            stateEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.State));
+
+            var postalCodeEntry = new Entry { Placeholder = "Postal code" };
+            postalCodeEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.PostalCode));
+
+            var countryEntry = new Entry { Placeholder = "Country" };
+            countryEntry.SetBinding(Entry.TextProperty, nameof(PageModels.PeopleDetailPageModel.Country));
+
+            var addPhotoButton = new Button { Text = "Foto aufnehmen", MinimumHeightRequest = 44 };
+            addPhotoButton.SetBinding(Button.CommandProperty, nameof(PageModels.PeopleDetailPageModel.AddPhotoCommand));
+            addPhotoButton.SetBinding(IsEnabledProperty, nameof(PageModels.PeopleDetailPageModel.CanManageMedia));
+
+            var addVideoButton = new Button { Text = "Video aufnehmen", MinimumHeightRequest = 44 };
+            addVideoButton.SetBinding(Button.CommandProperty, nameof(PageModels.PeopleDetailPageModel.AddVideoCommand));
+            addVideoButton.SetBinding(IsEnabledProperty, nameof(PageModels.PeopleDetailPageModel.CanManageMedia));
+
+            var importAudioButton = new Button { Text = "Audio importieren", MinimumHeightRequest = 44 };
+            importAudioButton.SetBinding(Button.CommandProperty, nameof(PageModels.PeopleDetailPageModel.ImportAudioCommand));
+            importAudioButton.SetBinding(IsEnabledProperty, nameof(PageModels.PeopleDetailPageModel.CanManageMedia));
+
+            var mediaHintLabel = new Label
+            {
+                Text = "Medien können nach dem ersten Speichern hinzugefügt werden.",
+                FontSize = 12
+            };
+
+            var mediaCollectionView = new CollectionView
+            {
+                SelectionMode = SelectionMode.None,
+                EmptyView = new Label
+                {
+                    Text = "Keine Medien vorhanden.",
+                    HorizontalOptions = LayoutOptions.Center,
+                    Margin = new Thickness(0, 8)
+                },
+                ItemTemplate = new DataTemplate(() =>
+                {
+                    var fileNameLabel = new Label { FontAttributes = FontAttributes.Bold };
+                    fileNameLabel.SetBinding(Label.TextProperty, nameof(Models.MediaItem.OriginalFileName));
+
+                    var typeLabel = new Label { FontSize = 12 };
+                    typeLabel.SetBinding(Label.TextProperty, nameof(Models.MediaItem.Type));
+
+                    var openButton = new Button { Text = "Öffnen", MinimumHeightRequest = 36 };
+                    openButton.Clicked += async (_, _) =>
+                    {
+                        if (((Button)_).BindingContext is Models.MediaItem item)
+                        {
+                            await _model.OpenMediaCommand.ExecuteAsync(item);
+                        }
+                    };
+
+                    var deleteButton = new Button { Text = "Löschen", MinimumHeightRequest = 36 };
+                    deleteButton.Clicked += async (_, _) =>
+                    {
+                        if (((Button)_).BindingContext is Models.MediaItem item)
+                        {
+                            await _model.DeleteMediaCommand.ExecuteAsync(item);
+                        }
+                    };
+
+                    return new Border
+                    {
+                        Margin = new Thickness(0, 0, 0, 8),
+                        Padding = 12,
+                        StrokeThickness = 0,
+                        Content = new VerticalStackLayout
+                        {
+                            Spacing = 6,
+                            Children =
+                            {
+                                fileNameLabel,
+                                typeLabel,
+                                new HorizontalStackLayout
+                                {
+                                    Spacing = 8,
+                                    Children = { openButton, deleteButton }
+                                }
+                            }
+                        }
+                    };
+                })
+            };
+            mediaCollectionView.SetBinding(ItemsView.ItemsSourceProperty, nameof(PageModels.PeopleDetailPageModel.MediaItems));
+
+            var saveButton = new Button { Text = "Save", MinimumHeightRequest = 44 };
+            saveButton.SetBinding(Button.CommandProperty, nameof(PageModels.PeopleDetailPageModel.SaveCommand));
+
+            Content = new ScrollView
+            {
+                Content = new VerticalStackLayout
+                {
+                    Padding = 16,
+                    Spacing = 12,
+                    Children =
+                    {
+                        firstNameEntry,
+                        lastNameEntry,
+                        emailEntry,
+                        phoneEntry,
+                        new Label { Text = "Date of birth" },
+                        datePicker,
+                        new Label { Text = "Address" },
+                        streetEntry,
+                        cityEntry,
+                        stateEntry,
+                        postalCodeEntry,
+                        countryEntry,
+                        new Label { Text = "Notes" },
+                        notesEditor,
+                        new Label { Text = "Media" },
+                        mediaHintLabel,
+                        new HorizontalStackLayout
+                        {
+                            Spacing = 8,
+                            Children = { addPhotoButton, addVideoButton, importAudioButton }
+                        },
+                        mediaCollectionView,
+                        saveButton
+                    }
+                }
+            };
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _model.AppearingCommand.Execute(null);
+        }
+    }
+}

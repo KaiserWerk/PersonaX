@@ -1,0 +1,11 @@
+﻿namespace PersonaX.UI.Pages
+{
+    public partial class PeopleDetailPage : ContentPage
+    {
+        public PeopleDetailPage(PageModels.PeopleDetailPageModel model)
+        {
+            BindingContext = model;
+            InitializeComponent();
+        }
+    }
+}

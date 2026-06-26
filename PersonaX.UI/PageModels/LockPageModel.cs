@@ -14,6 +14,8 @@ namespace PersonaX.UI.PageModels
         private bool _showSetupMode;
         private string _confirmPin = string.Empty;
         private int _failedAttempts;
+        private bool _isBiometricsAvailable;
+        private bool _isBiometricsEnabled;
 
         public string Pin
         {
@@ -71,15 +73,51 @@ namespace PersonaX.UI.PageModels
             set => SetProperty(ref _failedAttempts, value);
         }
 
+        public bool IsBiometricsAvailable
+        {
+            get => _isBiometricsAvailable;
+            set
+            {
+                if (SetProperty(ref _isBiometricsAvailable, value))
+                {
+                    OnPropertyChanged(nameof(ShowBiometricsButton));
+                    OnPropertyChanged(nameof(ShowBiometricsSetupButton));
+                    OnPropertyChanged(nameof(BiometricsStatusText));
+                }
+            }
+        }
+
+        public bool IsBiometricsEnabled
+        {
+            get => _isBiometricsEnabled;
+            set
+            {
+                if (SetProperty(ref _isBiometricsEnabled, value))
+                {
+                    OnPropertyChanged(nameof(ShowBiometricsButton));
+                    OnPropertyChanged(nameof(ShowBiometricsSetupButton));
+                    OnPropertyChanged(nameof(BiometricsStatusText));
+                }
+            }
+        }
+
         public bool ShowUnlockMode => !ShowSetupMode;
         public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
         public bool IsUnlockButtonEnabled => !IsUnlocking;
         public string TitleText => ShowSetupMode ? "Setup PIN" : "Enter PIN";
         public string PrimaryActionText => ShowSetupMode ? "Create PIN" : "Unlock";
+        public bool ShowBiometricsButton => ShowUnlockMode && IsBiometricsAvailable && IsBiometricsEnabled;
+        public bool ShowBiometricsSetupButton => IsBiometricsAvailable && !IsBiometricsEnabled;
+        public string BiometricsStatusText => !IsBiometricsAvailable
+            ? "Biometrie ist auf diesem Gerät derzeit nicht verfügbar."
+            : IsBiometricsEnabled
+                ? "Biometrie ist aktiviert und kann zum Entsperren verwendet werden."
+                : "Biometrie kann auf diesem Gerät aktiviert werden.";
 
         public IAsyncRelayCommand AppearingCommand { get; }
         public IAsyncRelayCommand UnlockCommand { get; }
         public IAsyncRelayCommand UnlockWithBiometricsCommand { get; }
+        public IAsyncRelayCommand EnableBiometricsCommand { get; }
 
         public LockPageModel(ILockService lockService, IKeyStoreService keyStoreService)
         {
@@ -88,12 +126,15 @@ namespace PersonaX.UI.PageModels
             AppearingCommand = new AsyncRelayCommand(AppearingAsync);
             UnlockCommand = new AsyncRelayCommand(UnlockAsync);
             UnlockWithBiometricsCommand = new AsyncRelayCommand(UnlockWithBiometricsAsync);
+            EnableBiometricsCommand = new AsyncRelayCommand(EnableBiometricsAsync);
         }
 
         private async Task AppearingAsync()
         {
             ShowSetupMode = !await _keyStoreService.IsInitializedAsync();
             FailedAttempts = _lockService.FailedAttempts;
+            IsBiometricsAvailable = await _keyStoreService.IsBiometricsAvailableAsync();
+            IsBiometricsEnabled = await _keyStoreService.GetBiometricsEnabledAsync();
             ErrorMessage = string.Empty;
             Pin = string.Empty;
             ConfirmPin = string.Empty;
@@ -163,15 +204,36 @@ namespace PersonaX.UI.PageModels
         {
             if (!await _keyStoreService.IsBiometricsAvailableAsync())
             {
-                ErrorMessage = "Biometric authentication not available";
+                ErrorMessage = "Biometrische Authentifizierung ist auf diesem Gerät nicht verfügbar.";
                 return;
             }
 
-            var unlocked = await _lockService.UnlockWithBiometricsAsync();
-            if (!unlocked)
+            try
             {
-                ErrorMessage = "Biometric authentication failed";
+                IsUnlocking = true;
+                var unlocked = await _lockService.UnlockWithBiometricsAsync();
+                if (!unlocked)
+                {
+                    ErrorMessage = "Biometrische Entsperrung wurde abgebrochen oder ist fehlgeschlagen.";
+                }
             }
+            finally
+            {
+                IsUnlocking = false;
+            }
+        }
+
+        private async Task EnableBiometricsAsync()
+        {
+            if (!await _keyStoreService.IsBiometricsAvailableAsync())
+            {
+                ErrorMessage = "Biometrie ist auf diesem Gerät nicht verfügbar.";
+                return;
+            }
+
+            await _keyStoreService.SetBiometricsEnabledAsync(true);
+            IsBiometricsEnabled = true;
+            ErrorMessage = "Biometrie wurde aktiviert.";
         }
     }
 }

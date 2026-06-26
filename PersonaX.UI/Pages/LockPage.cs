@@ -42,10 +42,21 @@ namespace PersonaX.UI.Pages
             attemptsLabel.SetBinding(Label.TextProperty, new Binding(nameof(PageModels.LockPageModel.FailedAttempts), stringFormat: "Failed attempts: {0}"));
             attemptsLabel.SetBinding(IsVisibleProperty, nameof(PageModels.LockPageModel.ShowUnlockMode));
 
+            var biometricsStatusLabel = new Label { HorizontalOptions = LayoutOptions.Center, FontSize = 12 };
+            biometricsStatusLabel.SetBinding(Label.TextProperty, nameof(PageModels.LockPageModel.BiometricsStatusText));
+
+            var enableBiometricsButton = new Button { Text = "Biometrie vorbereiten", MinimumHeightRequest = 44 };
+            enableBiometricsButton.SetBinding(Button.CommandProperty, nameof(PageModels.LockPageModel.EnableBiometricsCommand));
+            enableBiometricsButton.SetBinding(IsVisibleProperty, nameof(PageModels.LockPageModel.ShowBiometricsSetupButton));
+
             var unlockButton = new Button { MinimumHeightRequest = 44 };
             unlockButton.SetBinding(Button.TextProperty, nameof(PageModels.LockPageModel.PrimaryActionText));
             unlockButton.SetBinding(Button.CommandProperty, nameof(PageModels.LockPageModel.UnlockCommand));
             unlockButton.SetBinding(IsEnabledProperty, nameof(PageModels.LockPageModel.IsUnlockButtonEnabled));
+
+            var biometricUnlockButton = new Button { Text = "Mit Biometrie entsperren", MinimumHeightRequest = 44 };
+            biometricUnlockButton.SetBinding(Button.CommandProperty, nameof(PageModels.LockPageModel.UnlockWithBiometricsCommand));
+            biometricUnlockButton.SetBinding(IsVisibleProperty, nameof(PageModels.LockPageModel.ShowBiometricsButton));
 
             Content = new ScrollView
             {
@@ -63,7 +74,10 @@ namespace PersonaX.UI.Pages
                         unlockPinEntry,
                         errorLabel,
                         attemptsLabel,
+                        biometricsStatusLabel,
+                        enableBiometricsButton,
                         unlockButton
+                        , biometricUnlockButton
                     }
                 }
             };

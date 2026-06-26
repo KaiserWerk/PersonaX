@@ -53,5 +53,10 @@ namespace PersonaX.UI.Services
         /// Enables or disables biometric unlock.
         /// </summary>
         Task SetBiometricsEnabledAsync(bool enabled);
+
+        /// <summary>
+        /// Returns whether biometric unlock has been enabled by the user.
+        /// </summary>
+        Task<bool> GetBiometricsEnabledAsync();
     }
 }

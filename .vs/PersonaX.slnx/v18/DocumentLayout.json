@@ -1,0 +1,283 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\DevGit\\PersonaX\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\keystoreservice.biometrics.android.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\keystoreservice.biometrics.android.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\pagemodels\\peopledetailpagemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\pagemodels\\peopledetailpagemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\imediaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\imediaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\mediaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\mediaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\pages\\lockpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\pages\\lockpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\pages\\peopledetailpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\pages\\peopledetailpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\ikeystoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\ikeystoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\data\\peoplerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\data\\peoplerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\iencryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\iencryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\keystoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\keystoreservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\lockservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\lockservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\pagemodels\\lockpagemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\pagemodels\\lockpagemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\appshell.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\pagemodels\\peoplelistpagemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9EC2F7-C9B3-4E17-A7B9-204C3E0298EA}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\pagemodels\\peoplelistpagemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "KeyStoreService.Biometrics.Android.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\KeyStoreService.Biometrics.Android.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\KeyStoreService.Biometrics.Android.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\KeyStoreService.Biometrics.Android.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\KeyStoreService.Biometrics.Android.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:40:27.681Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "PeopleListPageModel.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PageModels\\PeopleListPageModel.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\PageModels\\PeopleListPageModel.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PageModels\\PeopleListPageModel.cs",
+              "RelativeToolTip": "PersonaX.UI\\PageModels\\PeopleListPageModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:25.671Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AppShell.xaml",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\AppShell.xaml",
+              "RelativeDocumentMoniker": "PersonaX.UI\\AppShell.xaml",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\AppShell.xaml",
+              "RelativeToolTip": "PersonaX.UI\\AppShell.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-06-26T20:14:25.568Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "LockPageModel.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PageModels\\LockPageModel.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\PageModels\\LockPageModel.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PageModels\\LockPageModel.cs",
+              "RelativeToolTip": "PersonaX.UI\\PageModels\\LockPageModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:25.472Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "LockService.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\LockService.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\LockService.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\LockService.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\LockService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:25.385Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "KeyStoreService.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\KeyStoreService.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\KeyStoreService.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\KeyStoreService.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\KeyStoreService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:25.294Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "EncryptionService.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\EncryptionService.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\EncryptionService.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\EncryptionService.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\EncryptionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:25.207Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IEncryptionService.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\IEncryptionService.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\IEncryptionService.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\IEncryptionService.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\IEncryptionService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:25.121Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PeopleRepository.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Data\\PeopleRepository.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Data\\PeopleRepository.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Data\\PeopleRepository.cs",
+              "RelativeToolTip": "PersonaX.UI\\Data\\PeopleRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:25.034Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IKeyStoreService.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\IKeyStoreService.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\IKeyStoreService.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\IKeyStoreService.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\IKeyStoreService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:24.946Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PeopleDetailPage.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Pages\\PeopleDetailPage.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Pages\\PeopleDetailPage.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Pages\\PeopleDetailPage.cs",
+              "RelativeToolTip": "PersonaX.UI\\Pages\\PeopleDetailPage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:24.849Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LockPage.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Pages\\LockPage.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Pages\\LockPage.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Pages\\LockPage.cs",
+              "RelativeToolTip": "PersonaX.UI\\Pages\\LockPage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:24.756Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MediaService.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\MediaService.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\MediaService.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\MediaService.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\MediaService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:24.667Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IMediaService.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\IMediaService.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\IMediaService.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\IMediaService.cs",
+              "RelativeToolTip": "PersonaX.UI\\Services\\IMediaService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:24.58Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PeopleDetailPageModel.cs",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PageModels\\PeopleDetailPageModel.cs",
+              "RelativeDocumentMoniker": "PersonaX.UI\\PageModels\\PeopleDetailPageModel.cs",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PageModels\\PeopleDetailPageModel.cs",
+              "RelativeToolTip": "PersonaX.UI\\PageModels\\PeopleDetailPageModel.cs",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAiwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-26T20:14:24.481Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

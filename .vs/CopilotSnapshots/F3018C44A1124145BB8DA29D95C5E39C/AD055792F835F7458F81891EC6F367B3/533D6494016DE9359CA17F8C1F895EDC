@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:PersonaX.UI.PageModels"
+             xmlns:models="clr-namespace:PersonaX.UI.Models"
+             xmlns:controls="clr-namespace:PersonaX.UI.Pages.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="PersonaX.UI.Pages.PeopleListPage"
+             x:DataType="pageModels:PeopleListPageModel"
+             x:Name="PeopleList"
+             Title="People">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+                BindingContext="{Binding Path=BindingContext, Source={x:Reference PeopleList}, x:DataType=ContentPage}"
+                EventName="Appearing"
+                Command="{Binding AppearingCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding People}"
+                            Margin="{StaticResource LayoutPadding}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedPerson}"
+                            SelectionChangedCommand="{Binding NavigateToPersonCommand}"
+                            SelectionChangedCommandParameter="{Binding SelectedPerson}">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="20" Spacing="10">
+                        <Label Text="Noch keine Personen vorhanden." HorizontalOptions="Center" />
+                        <Label Text="Füge eine Person über den Plus-Button hinzu." HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Person">
+                        <Border Margin="0,0,0,10"
+                                Padding="12"
+                                StrokeThickness="0"
+                                Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}">
+                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="{Binding FullName}" FontSize="20" FontAttributes="Bold" />
+                                <Label Grid.Row="1" Text="{Binding Email}" />
+                                <Label Grid.Row="2" Text="{Binding PhoneNumber}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <controls:AddButton Command="{Binding AddPersonCommand}"
+                            ToolTipProperties.Text="Add person"
+                            SemanticProperties.Description="Add person" />
+    </Grid>
+</ContentPage>

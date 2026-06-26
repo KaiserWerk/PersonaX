@@ -6,11 +6,12 @@ namespace PersonaX.UI.Services
     /// Service for secure key storage using MAUI SecureStorage and optional biometrics.
     /// Manages PIN-based authentication and master key lifecycle.
     /// </summary>
-    public class KeyStoreService : IKeyStoreService
+    public partial class KeyStoreService : IKeyStoreService
     {
         private const string SaltKey = "pii_salt";
         private const string WrappedKeyKey = "pii_wrapped_key";
         private const string BiometricsEnabledKey = "pii_biometrics_enabled";
+        private const string BiometricsMasterKeyKey = "pii_biometrics_master_key";
         private const string InitializedKey = "pii_initialized";
 
         private readonly IEncryptionService _encryptionService;
@@ -92,18 +93,23 @@ namespace PersonaX.UI.Services
 
         public async Task<bool> UnlockWithBiometricsAsync()
         {
-            // Check if biometrics is enabled
-            var enabled = await SecureStorage.GetAsync(BiometricsEnabledKey);
-            if (enabled != "true")
+            if (!await GetBiometricsEnabledAsync())
                 return false;
 
-            // TODO: Implement platform-specific biometric authentication
-            // For Android: AndroidX.Biometric.BiometricPrompt
-            // For iOS: LocalAuthentication.LAContext
-            // This is a placeholder for now
+            var storedMasterKeyBase64 = await SecureStorage.GetAsync(BiometricsMasterKeyKey);
+            if (string.IsNullOrWhiteSpace(storedMasterKeyBase64))
+            {
+                return false;
+            }
 
-            await Task.CompletedTask;
-            return false; // Not implemented yet
+            var authenticated = await AuthenticateBiometricPromptAsync();
+            if (!authenticated)
+            {
+                return false;
+            }
+
+            _masterKeyInMemory = Convert.FromBase64String(storedMasterKeyBase64);
+            return true;
         }
 
         public Task LockAsync()
@@ -145,9 +151,7 @@ namespace PersonaX.UI.Services
 
         public Task<bool> IsBiometricsAvailableAsync()
         {
-            // TODO: Check platform capabilities
-            // For now, return false
-            return Task.FromResult(false);
+            return GetPlatformBiometricsAvailabilityAsync();
         }
 
         public async Task SetBiometricsEnabledAsync(bool enabled)
@@ -155,7 +159,25 @@ namespace PersonaX.UI.Services
             if (enabled && !await IsBiometricsAvailableAsync())
                 throw new InvalidOperationException("Biometric authentication is not available on this device");
 
+            if (enabled && _masterKeyInMemory is null)
+                throw new InvalidOperationException("Biometrie kann erst nach erfolgreicher PIN-Entsperrung aktiviert werden.");
+
+            if (enabled)
+            {
+                await SecureStorage.SetAsync(BiometricsMasterKeyKey, Convert.ToBase64String(_masterKeyInMemory!));
+            }
+            else
+            {
+                SecureStorage.Remove(BiometricsMasterKeyKey);
+            }
+
             await SecureStorage.SetAsync(BiometricsEnabledKey, enabled ? "true" : "false");
+        }
+
+        public async Task<bool> GetBiometricsEnabledAsync()
+        {
+            var enabled = await SecureStorage.GetAsync(BiometricsEnabledKey);
+            return enabled == "true";
         }
 
         /// <summary>
@@ -198,5 +220,8 @@ namespace PersonaX.UI.Services
             var wrappingKey = _encryptionService.DeriveMasterKeyFromPin(pin, salt);
             return _encryptionService.DecryptAesGcm(ciphertext, wrappingKey, iv, tag);
         }
+
+        private partial Task<bool> AuthenticateBiometricPromptAsync();
+        private partial Task<bool> GetPlatformBiometricsAvailabilityAsync();
     }
 }

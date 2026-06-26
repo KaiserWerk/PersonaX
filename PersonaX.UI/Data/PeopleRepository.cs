@@ -47,6 +47,12 @@ namespace PersonaX.UI.Data
                 });
             }
 
+            foreach (var person in persons)
+            {
+                person.Address = await GetAddressAsync(connection, person.ID);
+                person.MediaItems = await GetMediaItemsAsync(connection, person.ID);
+            }
+
             return persons;
         }
 
@@ -65,7 +71,7 @@ namespace PersonaX.UI.Data
             await using var reader = await selectCmd.ExecuteReaderAsync();
             if (await reader.ReadAsync())
             {
-                return new Person
+                var person = new Person
                 {
                     ID = reader.GetInt32(0),
                     FirstName = reader.GetString(1),
@@ -77,6 +83,10 @@ namespace PersonaX.UI.Data
                     CreatedAt = DateTime.Parse(reader.GetString(7)),
                     ModifiedAt = DateTime.Parse(reader.GetString(8))
                 };
+
+                person.Address = await GetAddressAsync(connection, person.ID);
+                person.MediaItems = await GetMediaItemsAsync(connection, person.ID);
+                return person;
             }
 
             return null;
@@ -126,6 +136,8 @@ namespace PersonaX.UI.Data
             {
                 item.ID = Convert.ToInt32(result);
             }
+
+            await SaveAddressAsync(connection, item);
 
             return item.ID;
         }
@@ -181,7 +193,112 @@ namespace PersonaX.UI.Data
                 });
             }
 
+            foreach (var person in persons)
+            {
+                person.Address = await GetAddressAsync(connection, person.ID);
+                person.MediaItems = await GetMediaItemsAsync(connection, person.ID);
+            }
+
             return persons;
+        }
+
+        private static async Task<Address?> GetAddressAsync(SqliteConnection connection, int personId)
+        {
+            var addressCmd = connection.CreateCommand();
+            addressCmd.CommandText = "SELECT * FROM Address WHERE PersonID = @personId LIMIT 1";
+            addressCmd.Parameters.AddWithValue("@personId", personId);
+
+            await using var reader = await addressCmd.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+            {
+                return null;
+            }
+
+            return new Address
+            {
+                ID = reader.GetInt32(0),
+                PersonID = reader.GetInt32(1),
+                Street = reader.GetString(2),
+                City = reader.GetString(3),
+                State = reader.GetString(4),
+                PostalCode = reader.GetString(5),
+                Country = reader.GetString(6)
+            };
+        }
+
+        private static async Task<List<MediaItem>> GetMediaItemsAsync(SqliteConnection connection, int personId)
+        {
+            var mediaCmd = connection.CreateCommand();
+            mediaCmd.CommandText = "SELECT * FROM MediaItem WHERE PersonID = @personId ORDER BY CreatedAt DESC";
+            mediaCmd.Parameters.AddWithValue("@personId", personId);
+
+            var mediaItems = new List<MediaItem>();
+            await using var reader = await mediaCmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                mediaItems.Add(new MediaItem
+                {
+                    ID = reader.GetInt32(0),
+                    PersonID = reader.GetInt32(1),
+                    Type = (MediaType)reader.GetInt32(2),
+                    OriginalFileName = reader.GetString(3),
+                    EncryptedFilePath = reader.GetString(4),
+                    MimeType = reader.GetString(5),
+                    IV = reader.GetString(6),
+                    Tag = reader.GetString(7),
+                    CreatedAt = DateTime.Parse(reader.GetString(8))
+                });
+            }
+
+            return mediaItems;
+        }
+
+        private static async Task SaveAddressAsync(SqliteConnection connection, Person item)
+        {
+            if (item.Address is null)
+            {
+                var deleteCmd = connection.CreateCommand();
+                deleteCmd.CommandText = "DELETE FROM Address WHERE PersonID = @personId";
+                deleteCmd.Parameters.AddWithValue("@personId", item.ID);
+                await deleteCmd.ExecuteNonQueryAsync();
+                return;
+            }
+
+            item.Address.PersonID = item.ID;
+
+            var existingAddress = await GetAddressAsync(connection, item.ID);
+            var addressCmd = connection.CreateCommand();
+            if (existingAddress is null)
+            {
+                addressCmd.CommandText = @"
+                    INSERT INTO Address (PersonID, Street, City, State, PostalCode, Country)
+                    VALUES (@PersonID, @Street, @City, @State, @PostalCode, @Country);
+                    SELECT last_insert_rowid();";
+            }
+            else
+            {
+                addressCmd.CommandText = @"
+                    UPDATE Address
+                    SET Street = @Street, City = @City, State = @State, PostalCode = @PostalCode, Country = @Country
+                    WHERE PersonID = @PersonID";
+            }
+
+            addressCmd.Parameters.AddWithValue("@PersonID", item.Address.PersonID);
+            addressCmd.Parameters.AddWithValue("@Street", item.Address.Street);
+            addressCmd.Parameters.AddWithValue("@City", item.Address.City);
+            addressCmd.Parameters.AddWithValue("@State", item.Address.State);
+            addressCmd.Parameters.AddWithValue("@PostalCode", item.Address.PostalCode);
+            addressCmd.Parameters.AddWithValue("@Country", item.Address.Country);
+
+            var result = await addressCmd.ExecuteScalarAsync();
+            if (existingAddress is null && result is not null)
+            {
+                item.Address.ID = Convert.ToInt32(result);
+            }
+            else if (existingAddress is not null)
+            {
+                item.Address.ID = existingAddress.ID;
+            }
         }
     }
 }

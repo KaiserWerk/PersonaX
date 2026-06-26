@@ -1,0 +1,195 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PersonaX.UI.Data;
+using PersonaX.UI.Models;
+using PersonaX.UI.Services;
+
+namespace PersonaX.UI.PageModels
+{
+    public class PeopleDetailPageModel : ObservableObject, IQueryAttributable
+    {
+        private readonly PeopleRepository _peopleRepository;
+        private readonly ILockService _lockService;
+        private Person? _person;
+        private string _firstName = string.Empty;
+        private string _lastName = string.Empty;
+        private string _email = string.Empty;
+        private string _phoneNumber = string.Empty;
+        private DateTime _dateOfBirth = DateTime.Today;
+        private string _notes = string.Empty;
+        private bool _isBusy;
+
+        public string FirstName
+        {
+            get => _firstName;
+            set => SetProperty(ref _firstName, value);
+        }
+
+        public string LastName
+        {
+            get => _lastName;
+            set => SetProperty(ref _lastName, value);
+        }
+
+        public string Email
+        {
+            get => _email;
+            set => SetProperty(ref _email, value);
+        }
+
+        public string PhoneNumber
+        {
+            get => _phoneNumber;
+            set => SetProperty(ref _phoneNumber, value);
+        }
+
+        public DateTime DateOfBirth
+        {
+            get => _dateOfBirth;
+            set => SetProperty(ref _dateOfBirth, value);
+        }
+
+        public string Notes
+        {
+            get => _notes;
+            set => SetProperty(ref _notes, value);
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
+        }
+
+        public bool CanDelete => _person is not null && _person.ID != 0;
+        public IRelayCommand AppearingCommand { get; }
+        public IAsyncRelayCommand SaveCommand { get; }
+        public IAsyncRelayCommand DeleteCommand { get; }
+
+        public PeopleDetailPageModel(PeopleRepository peopleRepository, ILockService lockService)
+        {
+            _peopleRepository = peopleRepository;
+            _lockService = lockService;
+            AppearingCommand = new RelayCommand(Appearing);
+            SaveCommand = new AsyncRelayCommand(SaveAsync);
+            DeleteCommand = new AsyncRelayCommand(DeleteAsync, () => CanDelete);
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            _lockService.NotifyUserActivity();
+
+            if (query.TryGetValue("id", out var value) && int.TryParse(value?.ToString(), out var id))
+            {
+                LoadAsync(id).FireAndForget();
+                return;
+            }
+
+            _person = new Person();
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Email = string.Empty;
+            PhoneNumber = string.Empty;
+            DateOfBirth = DateTime.Today;
+            Notes = string.Empty;
+                DeleteCommand.NotifyCanExecuteChanged();
+            OnPropertyChanged(nameof(CanDelete));
+        }
+
+        private void Appearing()
+        {
+            _lockService.NotifyUserActivity();
+        }
+
+        private async Task SaveAsync()
+        {
+            _lockService.NotifyUserActivity();
+
+            if (string.IsNullOrWhiteSpace(FirstName) && string.IsNullOrWhiteSpace(LastName))
+            {
+                await Shell.Current.DisplayAlert("Validation", "Bitte Vorname oder Nachname eingeben.", "OK");
+                return;
+            }
+
+            _person ??= new Person();
+            _person.FirstName = FirstName.Trim();
+            _person.LastName = LastName.Trim();
+            _person.Email = Email.Trim();
+            _person.PhoneNumber = PhoneNumber.Trim();
+            _person.DateOfBirth = DateOfBirth;
+            _person.Notes = Notes?.Trim() ?? string.Empty;
+
+            await _peopleRepository.SaveItemAsync(_person);
+            await AppShell.DisplayToastAsync("Person gespeichert");
+            await Shell.Current.GoToAsync("..");
+        }
+
+        private async Task DeleteAsync()
+        {
+            _lockService.NotifyUserActivity();
+
+            if (_person is null || _person.ID == 0)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            var confirmed = await Shell.Current.DisplayAlert(
+                "Person löschen",
+                $"{_person.FullName} wirklich löschen?",
+                "Löschen",
+                "Abbrechen");
+
+            if (!confirmed)
+            {
+                return;
+            }
+
+            await _peopleRepository.DeleteItemAsync(_person);
+            await AppShell.DisplayToastAsync("Person gelöscht");
+            await Shell.Current.GoToAsync("..");
+        }
+
+        private async Task LoadAsync(int id)
+        {
+            try
+            {
+                IsBusy = true;
+                _person = await _peopleRepository.GetAsync(id);
+                if (_person is null)
+                {
+                    await Shell.Current.DisplayAlert("Fehler", $"Person mit ID {id} wurde nicht gefunden.", "OK");
+                    await Shell.Current.GoToAsync("..");
+                    return;
+                }
+
+                FirstName = _person.FirstName;
+                LastName = _person.LastName;
+                Email = _person.Email;
+                PhoneNumber = _person.PhoneNumber;
+                DateOfBirth = _person.DateOfBirth == default ? DateTime.Today : _person.DateOfBirth;
+                Notes = _person.Notes;
+                DeleteCommand.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(CanDelete));
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+    }
+
+    internal static class PeopleDetailTaskExtensions
+    {
+        public static void FireAndForget(this Task task)
+        {
+            task.ContinueWith(static t =>
+            {
+                if (t.Exception is not null)
+                {
+                    System.Diagnostics.Debug.WriteLine(t.Exception);
+                }
+            }, TaskScheduler.Default);
+        }
+    }
+}
