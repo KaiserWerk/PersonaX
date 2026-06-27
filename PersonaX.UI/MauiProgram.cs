@@ -53,8 +53,6 @@ namespace PersonaX.UI
             builder.Services.AddSingleton<SeedDataService>();
             builder.Services.AddSingleton<ModalErrorHandler>();
 
-            builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
-            builder.Services.AddSingleton<ILockService, LockService>();
             builder.Services.AddSingleton<IMediaService, MediaService>();
             builder.Services.AddSingleton<IExportService, ExportService>();
             builder.Services.AddHttpClient<OpenAiLlmService>();
@@ -70,7 +68,6 @@ namespace PersonaX.UI
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
             builder.Services.AddSingleton<PeopleListPageModel>();
-            builder.Services.AddTransient<LockPageModel>();
 
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
             builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");

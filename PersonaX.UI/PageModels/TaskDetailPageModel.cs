@@ -2,8 +2,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PersonaX.UI.Data;
 using PersonaX.UI.Models;
-using PersonaX.UI.Services;
-
 namespace PersonaX.UI.PageModels
 {
     public partial class TaskDetailPageModel : ObservableObject, IQueryAttributable
@@ -14,7 +12,6 @@ namespace PersonaX.UI.PageModels
         private readonly ProjectRepository _projectRepository;
         private readonly TaskRepository _taskRepository;
         private readonly ModalErrorHandler _errorHandler;
-        private readonly ILockService _lockService;
 
         [ObservableProperty]
         private string _title = string.Empty;
@@ -35,17 +32,15 @@ namespace PersonaX.UI.PageModels
         [ObservableProperty]
         private bool _isExistingProject;
 
-        public TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler, ILockService lockService)
+        public TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler)
         {
             _projectRepository = projectRepository;
             _taskRepository = taskRepository;
             _errorHandler = errorHandler;
-            _lockService = lockService;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            _lockService.NotifyUserActivity();
             LoadTaskAsync(query).FireAndForgetSafeAsync(_errorHandler);
         }
 
@@ -124,7 +119,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task Save()
         {
-            _lockService.NotifyUserActivity();
             if (_task is null)
             {
                 _errorHandler.HandleError(
@@ -157,7 +151,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand(CanExecute = nameof(CanDelete))]
         private async Task Delete()
         {
-            _lockService.NotifyUserActivity();
             if (_task is null || Project is null)
             {
                 _errorHandler.HandleError(

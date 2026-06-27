@@ -4,13 +4,11 @@ namespace PersonaX.UI.Services
 {
     public partial class MediaService : IMediaService
     {
-        private readonly IEncryptionService _encryptionService;
         private readonly MediaRepository _mediaRepository;
         private AudioRecordingSession? _audioRecordingSession;
 
-        public MediaService(IEncryptionService encryptionService, MediaRepository mediaRepository)
+        public MediaService(MediaRepository mediaRepository)
         {
-            _encryptionService = encryptionService;
             _mediaRepository = mediaRepository;
         }
 
@@ -61,21 +59,20 @@ namespace PersonaX.UI.Services
             var personMediaDirectory = Path.Combine(Constants.MediaRootPath, personId.ToString());
             Directory.CreateDirectory(personMediaDirectory);
 
-            var encryptedFileName = $"{Guid.NewGuid():N}.enc";
-            var encryptedFilePath = Path.Combine(personMediaDirectory, encryptedFileName);
+            var extension = Path.GetExtension(fileResult.FileName);
+            var storedFileName = $"{Guid.NewGuid():N}{extension}";
+            var storedFilePath = Path.Combine(personMediaDirectory, storedFileName);
 
             await using var inputStream = await fileResult.OpenReadAsync();
-            using var memoryStream = new MemoryStream();
-            await inputStream.CopyToAsync(memoryStream, cancellationToken);
-
-            await File.WriteAllBytesAsync(encryptedFilePath, memoryStream.ToArray(), cancellationToken);
+            await using var outputStream = File.Create(storedFilePath);
+            await inputStream.CopyToAsync(outputStream, cancellationToken);
 
             var mediaItem = new MediaItem()
             {
                 PersonID = personId,
                 Type = mediaType,
                 OriginalFileName = fileResult.FileName,
-                FilePath = Path.GetRelativePath(Constants.MediaRootPath, encryptedFilePath),
+                FilePath = Path.GetRelativePath(Constants.MediaRootPath, storedFilePath),
                 MimeType = GetMimeType(fileResult.FileName, mediaType),
                 CreatedAt = DateTime.UtcNow
             };
@@ -125,19 +122,14 @@ namespace PersonaX.UI.Services
             }
         }
 
-        public async Task<string> CreateDecryptedCopyAsync(MediaItem mediaItem, CancellationToken cancellationToken = default)
-        {
-            return "";
-        }
-
         public async Task DeleteMediaAsync(MediaItem mediaItem, CancellationToken cancellationToken = default)
         {
             await _mediaRepository.DeleteItemAsync(mediaItem);
 
-            var encryptedPath = Path.Combine(Constants.MediaRootPath, mediaItem.FilePath);
-            if (File.Exists(encryptedPath))
+            var storedPath = Path.Combine(Constants.MediaRootPath, mediaItem.FilePath);
+            if (File.Exists(storedPath))
             {
-                File.Delete(encryptedPath);
+                File.Delete(storedPath);
             }
 
             await Task.CompletedTask;
@@ -168,14 +160,18 @@ namespace PersonaX.UI.Services
             var personMediaDirectory = Path.Combine(Constants.MediaRootPath, personId.ToString());
             Directory.CreateDirectory(personMediaDirectory);
 
-            var bytes = await File.ReadAllBytesAsync(filePath, cancellationToken);
+            var extension = Path.GetExtension(originalFileName);
+            var storedFileName = $"{Guid.NewGuid():N}{extension}";
+            var storedFilePath = Path.Combine(personMediaDirectory, storedFileName);
+
+            File.Copy(filePath, storedFilePath, true);
 
             var mediaItem = new MediaItem
             {
                 PersonID = personId,
                 Type = mediaType,
                 OriginalFileName = originalFileName,
-                FilePath = Path.GetRelativePath(Constants.MediaRootPath, filePath),
+                FilePath = Path.GetRelativePath(Constants.MediaRootPath, storedFilePath),
                 MimeType = GetMimeType(originalFileName, mediaType),
                 CreatedAt = DateTime.UtcNow
             };

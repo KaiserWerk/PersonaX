@@ -5,7 +5,7 @@ using PersonaX.UI.Models;
 namespace PersonaX.UI.Data
 {
     /// <summary>
-    /// Repository for managing Person entities with encrypted storage.
+    /// Repository for managing Person entities.
     /// </summary>
     public class PeopleRepository
     {

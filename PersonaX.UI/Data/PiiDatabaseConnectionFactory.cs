@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 namespace PersonaX.UI.Data
 {
     /// <summary>
-    /// Factory for creating SQLCipher encrypted database connections.
+    /// Factory for creating local SQLite database connections.
     /// </summary>
     public class PiiDatabaseConnectionFactory
     {
@@ -13,7 +13,7 @@ namespace PersonaX.UI.Data
         {}
 
         /// <summary>
-        /// Creates and opens a new SQLCipher connection using the database password from KeyStoreService.
+        /// Creates and opens a new SQLite connection.
         /// </summary>
         public async Task<SqliteConnection> CreateConnectionAsync()
         {
@@ -78,10 +78,8 @@ namespace PersonaX.UI.Data
                         PersonID INTEGER NOT NULL,
                         Type INTEGER NOT NULL,
                         OriginalFileName TEXT NOT NULL,
-                        EncryptedFilePath TEXT NOT NULL,
+                        FilePath TEXT NOT NULL,
                         MimeType TEXT NOT NULL,
-                        IV TEXT NOT NULL,
-                        Tag TEXT NOT NULL,
                         CreatedAt TEXT NOT NULL,
                         FOREIGN KEY (PersonID) REFERENCES Person(ID) ON DELETE CASCADE
                     );";

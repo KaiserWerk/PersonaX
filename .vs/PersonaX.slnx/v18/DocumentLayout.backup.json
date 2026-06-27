@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\DevGit\\PersonaX\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\platforms\\android\\androidmanifest.xml||{4E01A4BC-CFCF-452C-8C08-51352512D197}",
+      "RelativeMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\platforms\\android\\androidmanifest.xml||{4E01A4BC-CFCF-452C-8C08-51352512D197}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\services\\mediaservice.audio.android.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\services\\mediaservice.audio.android.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\personax.ui.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\personax.ui.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|c:\\devgit\\personax\\personax.ui\\personax.ui.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{AD74D1FB-8AC7-F932-9912-BBCCD60EA731}|PersonaX.UI\\PersonaX.UI.csproj|solutionrelative:personax.ui\\personax.ui.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,28 +34,38 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AndroidManifest.xml",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Platforms\\Android\\AndroidManifest.xml",
+              "RelativeDocumentMoniker": "PersonaX.UI\\Platforms\\Android\\AndroidManifest.xml",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Platforms\\Android\\AndroidManifest.xml",
+              "RelativeToolTip": "PersonaX.UI\\Platforms\\Android\\AndroidManifest.xml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2026-06-27T08:05:22.856Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MediaService.Audio.Android.cs",
-              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\MediaService.Audio.Android.cs",
-              "RelativeDocumentMoniker": "PersonaX.UI\\Services\\MediaService.Audio.Android.cs",
-              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\Services\\MediaService.Audio.Android.cs",
-              "RelativeToolTip": "PersonaX.UI\\Services\\MediaService.Audio.Android.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-27T07:11:29.271Z",
+              "Title": "PersonaX.UI",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PersonaX.UI.csproj",
+              "RelativeDocumentMoniker": "PersonaX.UI\\PersonaX.UI.csproj",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PersonaX.UI.csproj",
+              "RelativeToolTip": "PersonaX.UI\\PersonaX.UI.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-27T08:03:14.435Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MauiProgram.cs",
-              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\MauiProgram.cs",
-              "RelativeDocumentMoniker": "PersonaX.UI\\MauiProgram.cs",
-              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\MauiProgram.cs",
-              "RelativeToolTip": "PersonaX.UI\\MauiProgram.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAgwDQAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-27T07:02:54.57Z",
+              "DocumentIndex": 2,
+              "Title": "PersonaX.UI",
+              "DocumentMoniker": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PersonaX.UI.csproj",
+              "RelativeDocumentMoniker": "PersonaX.UI\\PersonaX.UI.csproj",
+              "ToolTip": "C:\\DevGit\\PersonaX\\PersonaX.UI\\PersonaX.UI.csproj",
+              "RelativeToolTip": "PersonaX.UI\\PersonaX.UI.csproj",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-27T08:02:50.175Z",
               "EditorCaption": ""
             }
           ]

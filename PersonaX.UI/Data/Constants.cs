@@ -8,17 +8,17 @@ namespace PersonaX.UI.Data
         public static string DatabasePath =>
             $"Data Source={Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename)}";
 
-        // PII-specific database (SQLCipher encrypted)
+        // Lokale Personen-Datenbank
         public const string PiiDatabaseFilename = "persona.db";
 
         public static string PiiDatabasePath =>
             Path.Combine(FileSystem.AppDataDirectory, PiiDatabaseFilename);
 
-        // Media storage root for encrypted files
+        // Media storage root
         public static string MediaRootPath =>
             Path.Combine(FileSystem.AppDataDirectory, "Media");
 
-        // Export directory for encrypted backups
+        // Export directory for backups
         public static string ExportPath =>
             Path.Combine(FileSystem.AppDataDirectory, "Exports");
     }

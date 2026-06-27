@@ -92,8 +92,8 @@ namespace PersonaX.UI.Data
             {
                 item.CreatedAt = DateTime.UtcNow;
                 saveCmd.CommandText = @"
-                    INSERT INTO MediaItem (PersonID, Type, OriginalFileName, EncryptedFilePath, MimeType, IV, Tag, CreatedAt)
-                    VALUES (@PersonID, @Type, @OriginalFileName, @EncryptedFilePath, @MimeType, @CreatedAt);
+                    INSERT INTO MediaItem (PersonID, Type, OriginalFileName, FilePath, MimeType, CreatedAt)
+                    VALUES (@PersonID, @Type, @OriginalFileName, @FilePath, @MimeType, @CreatedAt);
                     SELECT last_insert_rowid();";
             }
             else
@@ -101,7 +101,7 @@ namespace PersonaX.UI.Data
                 saveCmd.CommandText = @"
                     UPDATE MediaItem
                     SET PersonID = @PersonID, Type = @Type, OriginalFileName = @OriginalFileName,
-                        EncryptedFilePath = @EncryptedFilePath, MimeType = @MimeType
+                        FilePath = @FilePath, MimeType = @MimeType
                     WHERE ID = @ID";
                 saveCmd.Parameters.AddWithValue("@ID", item.ID);
             }
@@ -109,7 +109,7 @@ namespace PersonaX.UI.Data
             saveCmd.Parameters.AddWithValue("@PersonID", item.PersonID);
             saveCmd.Parameters.AddWithValue("@Type", (int)item.Type);
             saveCmd.Parameters.AddWithValue("@OriginalFileName", item.OriginalFileName);
-            saveCmd.Parameters.AddWithValue("@EncryptedFilePath", item.FilePath);
+            saveCmd.Parameters.AddWithValue("@FilePath", item.FilePath);
             saveCmd.Parameters.AddWithValue("@MimeType", item.MimeType);
             saveCmd.Parameters.AddWithValue("@CreatedAt", item.CreatedAt.ToString("o"));
 
@@ -124,7 +124,7 @@ namespace PersonaX.UI.Data
 
         /// <summary>
         /// Deletes a media item from the database.
-        /// Note: Caller is responsible for deleting the encrypted file from disk.
+        /// Note: Caller is responsible for deleting the file from disk.
         /// </summary>
         public async Task<int> DeleteItemAsync(MediaItem item)
         {

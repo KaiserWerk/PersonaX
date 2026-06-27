@@ -5,22 +5,15 @@ namespace PersonaX.UI.Services
 {
     public class ExportService : IExportService
     {
-        private readonly IEncryptionService _encryptionService;
         private readonly AuditLogRepository _auditLogRepository;
 
-        public ExportService(IEncryptionService encryptionService, AuditLogRepository auditLogRepository)
+        public ExportService(AuditLogRepository auditLogRepository)
         {
-            _encryptionService = encryptionService;
             _auditLogRepository = auditLogRepository;
         }
 
-        public async Task<string> ExportAsync(string passphrase, CancellationToken cancellationToken = default)
+        public async Task<string> ExportAsync(CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(passphrase))
-            {
-                throw new ArgumentException("Passphrase darf nicht leer sein.", nameof(passphrase));
-            }
-
             if (!File.Exists(Constants.PiiDatabasePath))
             {
                 throw new FileNotFoundException("Die PII-Datenbank wurde nicht gefunden.", Constants.PiiDatabasePath);
@@ -53,21 +46,8 @@ namespace PersonaX.UI.Services
                     JsonSerializer.Serialize(manifest),
                     cancellationToken);
 
-                var zipPath = Path.Combine(tempRoot, "payload.zip");
-                ZipFile.CreateFromDirectory(payloadDirectory, zipPath, CompressionLevel.Optimal, false);
-
-                var salt = _encryptionService.GenerateSalt();
-                var key = _encryptionService.DeriveMasterKeyFromPin(passphrase, salt);
-                var zipBytes = await File.ReadAllBytesAsync(zipPath, cancellationToken);
-                var encrypted = _encryptionService.EncryptAesGcm(zipBytes, key);
-
-                var outputPath = Path.Combine(Constants.ExportPath, $"personax-backup-{DateTime.UtcNow:yyyyMMddHHmmss}.pxbackup");
-                await using var output = File.Create(outputPath);
-                await output.WriteAsync(salt, cancellationToken);
-                await output.WriteAsync(encrypted.iv, cancellationToken);
-                await output.WriteAsync(encrypted.tag, cancellationToken);
-                await output.WriteAsync(encrypted.ciphertext, cancellationToken);
-                await output.FlushAsync(cancellationToken);
+                var outputPath = Path.Combine(Constants.ExportPath, $"personax-backup-{DateTime.UtcNow:yyyyMMddHHmmss}.zip");
+                ZipFile.CreateFromDirectory(payloadDirectory, outputPath, CompressionLevel.Optimal, false);
 
                 await _auditLogRepository.LogAsync(Models.AuditAction.Exported, "Backup", 0, Path.GetFileName(outputPath));
                 return outputPath;
@@ -81,30 +61,12 @@ namespace PersonaX.UI.Services
             }
         }
 
-        public async Task ImportAsync(string encryptedBackupPath, string passphrase, CancellationToken cancellationToken = default)
+        public async Task ImportAsync(string backupPath, CancellationToken cancellationToken = default)
         {
-            if (!File.Exists(encryptedBackupPath))
+            if (!File.Exists(backupPath))
             {
-                throw new FileNotFoundException("Backup-Datei wurde nicht gefunden.", encryptedBackupPath);
+                throw new FileNotFoundException("Backup-Datei wurde nicht gefunden.", backupPath);
             }
-
-            if (string.IsNullOrWhiteSpace(passphrase))
-            {
-                throw new ArgumentException("Passphrase darf nicht leer sein.", nameof(passphrase));
-            }
-
-            var envelope = await File.ReadAllBytesAsync(encryptedBackupPath, cancellationToken);
-            if (envelope.Length <= 44)
-            {
-                throw new InvalidOperationException("Backup-Datei ist ungültig.");
-            }
-
-            var salt = envelope[..16];
-            var iv = envelope[16..28];
-            var tag = envelope[28..44];
-            var ciphertext = envelope[44..];
-            var key = _encryptionService.DeriveMasterKeyFromPin(passphrase, salt);
-            var zipBytes = _encryptionService.DecryptAesGcm(ciphertext, key, iv, tag);
 
             var tempRoot = Path.Combine(FileSystem.CacheDirectory, $"import-{Guid.NewGuid():N}");
             Directory.CreateDirectory(tempRoot);
@@ -112,7 +74,7 @@ namespace PersonaX.UI.Services
             try
             {
                 var zipPath = Path.Combine(tempRoot, "payload.zip");
-                await File.WriteAllBytesAsync(zipPath, zipBytes, cancellationToken);
+                File.Copy(backupPath, zipPath, true);
 
                 var extractDirectory = Path.Combine(tempRoot, "payload");
                 ZipFile.ExtractToDirectory(zipPath, extractDirectory, true);
@@ -136,7 +98,7 @@ namespace PersonaX.UI.Services
                     CopyDirectory(mediaSource, Constants.MediaRootPath);
                 }
 
-                await _auditLogRepository.LogAsync(Models.AuditAction.Imported, "Backup", 0, Path.GetFileName(encryptedBackupPath));
+                await _auditLogRepository.LogAsync(Models.AuditAction.Imported, "Backup", 0, Path.GetFileName(backupPath));
             }
             finally
             {

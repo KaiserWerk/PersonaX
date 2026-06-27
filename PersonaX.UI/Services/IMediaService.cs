@@ -10,7 +10,6 @@ namespace PersonaX.UI.Services
         Task StartAudioRecordingAsync(int personId, CancellationToken cancellationToken = default);
         Task<MediaItem> StopAudioRecordingAsync(CancellationToken cancellationToken = default);
         Task<MediaItem> ImportMediaAsync(int personId, FileResult fileResult, MediaType mediaType, CancellationToken cancellationToken = default);
-        Task<string> CreateDecryptedCopyAsync(MediaItem mediaItem, CancellationToken cancellationToken = default);
         Task DeleteMediaAsync(MediaItem mediaItem, CancellationToken cancellationToken = default);
         Task<MediaItem> CaptureAudioAsync(int personId, CancellationToken cancellationToken = default);
     }

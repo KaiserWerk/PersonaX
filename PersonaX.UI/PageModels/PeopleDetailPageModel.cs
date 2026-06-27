@@ -10,7 +10,6 @@ namespace PersonaX.UI.PageModels
     public class PeopleDetailPageModel : ObservableObject, IQueryAttributable
     {
         private readonly PeopleRepository _peopleRepository;
-        private readonly ILockService _lockService;
         private readonly IMediaService _mediaService;
         private Person? _person;
         private string _firstName = string.Empty;
@@ -130,10 +129,9 @@ namespace PersonaX.UI.PageModels
         public IAsyncRelayCommand ToggleAudioRecordingCommand { get; }
         public IAsyncRelayCommand<MediaItem> DeleteMediaCommand { get; }
 
-        public PeopleDetailPageModel(PeopleRepository peopleRepository, ILockService lockService, IMediaService mediaService)
+        public PeopleDetailPageModel(PeopleRepository peopleRepository, IMediaService mediaService)
         {
             _peopleRepository = peopleRepository;
-            _lockService = lockService;
             _mediaService = mediaService;
             AppearingCommand = new RelayCommand(Appearing);
             SaveCommand = new AsyncRelayCommand(SaveAsync);
@@ -146,8 +144,6 @@ namespace PersonaX.UI.PageModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            _lockService.NotifyUserActivity();
-
             if (query.TryGetValue("id", out var value) && int.TryParse(value?.ToString(), out var id))
             {
                 LoadAsync(id).FireAndForget();
@@ -178,13 +174,10 @@ namespace PersonaX.UI.PageModels
 
         private void Appearing()
         {
-            _lockService.NotifyUserActivity();
         }
 
         private async Task SaveAsync()
         {
-            _lockService.NotifyUserActivity();
-
             if (string.IsNullOrWhiteSpace(FirstName) && string.IsNullOrWhiteSpace(LastName))
             {
                 await Shell.Current.DisplayAlert("Validation", "Bitte Vorname oder Nachname eingeben.", "OK");
@@ -214,8 +207,6 @@ namespace PersonaX.UI.PageModels
 
         private async Task DeleteAsync()
         {
-            _lockService.NotifyUserActivity();
-
             if (_person is null || _person.ID == 0)
             {
                 await Shell.Current.GoToAsync("..");
@@ -311,7 +302,6 @@ namespace PersonaX.UI.PageModels
 
         private async Task ToggleAudioRecordingAsync()
         {
-            _lockService.NotifyUserActivity();
             if (_person is null || _person.ID == 0)
             {
                 await Shell.Current.DisplayAlert("Hinweis", "Bitte die Person zuerst speichern.", "OK");
@@ -342,7 +332,6 @@ namespace PersonaX.UI.PageModels
 
         private async Task DeleteMediaAsync(MediaItem? mediaItem)
         {
-            _lockService.NotifyUserActivity();
             if (mediaItem is null)
             {
                 return;
@@ -365,7 +354,6 @@ namespace PersonaX.UI.PageModels
 
         private async Task AddMediaAsync(Func<Task<MediaItem>> action)
         {
-            _lockService.NotifyUserActivity();
             if (_person is null || _person.ID == 0)
             {
                 await Shell.Current.DisplayAlert("Hinweis", "Bitte die Person zuerst speichern.", "OK");

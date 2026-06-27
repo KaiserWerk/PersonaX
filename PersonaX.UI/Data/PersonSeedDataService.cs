@@ -6,16 +6,13 @@ namespace PersonaX.UI.Data
     {
         private readonly PeopleRepository _peopleRepository;
         private readonly MediaRepository _mediaRepository;
-        private readonly IEncryptionService _encryptionService;
 
         public PersonSeedDataService(
             PeopleRepository peopleRepository,
-            MediaRepository mediaRepository,
-            IEncryptionService encryptionService)
+            MediaRepository mediaRepository)
         {
             _peopleRepository = peopleRepository;
             _mediaRepository = mediaRepository;
-            _encryptionService = encryptionService;
         }
 
         public async Task SeedDebugDataAsync()
@@ -48,7 +45,7 @@ namespace PersonaX.UI.Data
                     Email = "alan@example.local",
                     PhoneNumber = "+44 20 7654321",
                     DateOfBirth = new DateTime(1912, 6, 23),
-                    Notes = "Beispielperson mit verschlüsselter Mediendatei."
+                    Notes = "Beispielperson mit Mediendatei."
                 }
             };
 
@@ -70,7 +67,7 @@ namespace PersonaX.UI.Data
             var personDirectory = Path.Combine(Constants.MediaRootPath, personId.ToString());
             Directory.CreateDirectory(personDirectory);
 
-            var fileName = "seed-photo.enc";
+            var fileName = "seed-photo.png";
             var fullPath = Path.Combine(personDirectory, fileName);
             await File.WriteAllBytesAsync(fullPath, imageBytes);
 

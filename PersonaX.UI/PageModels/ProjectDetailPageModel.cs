@@ -14,7 +14,6 @@ namespace PersonaX.UI.PageModels
         private readonly CategoryRepository _categoryRepository;
         private readonly TagRepository _tagRepository;
         private readonly ModalErrorHandler _errorHandler;
-        private readonly ILockService _lockService;
 
         [ObservableProperty]
         private string _name = string.Empty;
@@ -72,21 +71,19 @@ namespace PersonaX.UI.PageModels
         public bool HasCompletedTasks
             => _project?.Tasks.Any(t => t.IsCompleted) ?? false;
 
-        public ProjectDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler, ILockService lockService)
+        public ProjectDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
         {
             _projectRepository = projectRepository;
             _taskRepository = taskRepository;
             _categoryRepository = categoryRepository;
             _tagRepository = tagRepository;
             _errorHandler = errorHandler;
-            _lockService = lockService;
             _icon = _icons.First();
             Tasks = [];
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            _lockService.NotifyUserActivity();
             if (query.ContainsKey("id"))
             {
                 int id = Convert.ToInt32(query["id"]);
@@ -183,7 +180,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task TaskCompleted(ProjectTask task)
         {
-            _lockService.NotifyUserActivity();
             await _taskRepository.SaveItemAsync(task);
             OnPropertyChanged(nameof(HasCompletedTasks));
         }
@@ -191,7 +187,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task Save()
         {
-            _lockService.NotifyUserActivity();
             if (_project is null)
             {
                 _errorHandler.HandleError(
@@ -230,7 +225,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task AddTask()
         {
-            _lockService.NotifyUserActivity();
             if (_project is null)
             {
                 _errorHandler.HandleError(
@@ -250,7 +244,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand(CanExecute = nameof(CanDelete))]
         private async Task Delete()
         {
-            _lockService.NotifyUserActivity();
             if (_project.IsNullOrNew())
             {
                 await Shell.Current.GoToAsync("..");
@@ -265,14 +258,12 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private Task NavigateToTask(ProjectTask task)
         {
-            _lockService.NotifyUserActivity();
             return Shell.Current.GoToAsync($"task?id={task.ID}");
         }
 
         [RelayCommand]
         internal async Task ToggleTag(Tag tag)
         {
-            _lockService.NotifyUserActivity();
             tag.IsSelected = !tag.IsSelected;
 
             if (!_project.IsNullOrNew())
@@ -294,14 +285,12 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private void IconSelected(IconData icon)
         {
-            _lockService.NotifyUserActivity();
             SemanticScreenReader.Announce($"{icon.Description} selected");
         }
 
         [RelayCommand]
         private async Task CleanTasks()
         {
-            _lockService.NotifyUserActivity();
             var completedTasks = Tasks.Where(t => t.IsCompleted).ToArray();
             foreach (var task in completedTasks)
             {
@@ -317,7 +306,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task SelectionChanged(object parameter)
         {
-            _lockService.NotifyUserActivity();
             if (parameter is IEnumerable<object> enumerableParameter)
             {
                 var currentSelection = enumerableParameter.OfType<Tag>().ToList();

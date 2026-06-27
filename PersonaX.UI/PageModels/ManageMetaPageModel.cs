@@ -12,7 +12,6 @@ namespace PersonaX.UI.PageModels
         private readonly CategoryRepository _categoryRepository;
         private readonly TagRepository _tagRepository;
         private readonly SeedDataService _seedDataService;
-        private readonly ILockService _lockService;
 
         [ObservableProperty]
         private ObservableCollection<Category> _categories = [];
@@ -20,12 +19,11 @@ namespace PersonaX.UI.PageModels
         [ObservableProperty]
         private ObservableCollection<Tag> _tags = [];
 
-        public ManageMetaPageModel(CategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService, ILockService lockService)
+        public ManageMetaPageModel(CategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService)
         {
             _categoryRepository = categoryRepository;
             _tagRepository = tagRepository;
             _seedDataService = seedDataService;
-            _lockService = lockService;
         }
 
         private async Task LoadData()
@@ -39,14 +37,12 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private Task Appearing()
         {
-            _lockService.NotifyUserActivity();
             return LoadData();
         }
 
         [RelayCommand]
         private async Task SaveCategories()
         {
-            _lockService.NotifyUserActivity();
             foreach (var category in Categories)
             {
                 await _categoryRepository.SaveItemAsync(category);
@@ -59,7 +55,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task DeleteCategory(Category category)
         {
-            _lockService.NotifyUserActivity();
             Categories.Remove(category);
             await _categoryRepository.DeleteItemAsync(category);
             await AppShell.DisplayToastAsync("Category deleted");
@@ -69,7 +64,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task AddCategory()
         {
-            _lockService.NotifyUserActivity();
             var category = new Category();
             Categories.Add(category);
             await _categoryRepository.SaveItemAsync(category);
@@ -80,7 +74,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task SaveTags()
         {
-            _lockService.NotifyUserActivity();
             foreach (var tag in Tags)
             {
                 await _tagRepository.SaveItemAsync(tag);
@@ -93,7 +86,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task DeleteTag(Tag tag)
         {
-            _lockService.NotifyUserActivity();
             Tags.Remove(tag);
             await _tagRepository.DeleteItemAsync(tag);
             await AppShell.DisplayToastAsync("Tag deleted");
@@ -103,7 +95,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task AddTag()
         {
-            _lockService.NotifyUserActivity();
             var tag = new Tag();
             Tags.Add(tag);
             await _tagRepository.SaveItemAsync(tag);
@@ -114,7 +105,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task Reset()
         {
-            _lockService.NotifyUserActivity();
             Preferences.Default.Remove("is_seeded");
             await _seedDataService.LoadSeedDataAsync();
             Preferences.Default.Set("is_seeded", true);

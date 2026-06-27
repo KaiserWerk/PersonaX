@@ -13,7 +13,6 @@ namespace PersonaX.UI.PageModels
         private readonly CategoryRepository _categoryRepository;
         private readonly ModalErrorHandler _errorHandler;
         private readonly SeedDataService _seedDataService;
-        private readonly ILockService _lockService;
 
         [ObservableProperty]
         private List<CategoryChartData> _todoCategoryData = [];
@@ -43,14 +42,13 @@ namespace PersonaX.UI.PageModels
             => Tasks?.Any(t => t.IsCompleted) ?? false;
 
         public MainPageModel(SeedDataService seedDataService, ProjectRepository projectRepository,
-            TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler, ILockService lockService)
+            TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler)
         {
             _projectRepository = projectRepository;
             _taskRepository = taskRepository;
             _categoryRepository = categoryRepository;
             _errorHandler = errorHandler;
             _seedDataService = seedDataService;
-            _lockService = lockService;
         }
 
         private async Task LoadData()
@@ -103,7 +101,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task Refresh()
         {
-            _lockService.NotifyUserActivity();
             try
             {
                 IsRefreshing = true;
@@ -122,7 +119,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private void NavigatedTo()
         {
-            _lockService.NotifyUserActivity();
             _isNavigatedTo = true;
         }
 
@@ -133,7 +129,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private async Task Appearing()
         {
-            _lockService.NotifyUserActivity();
             if (!_dataLoaded)
             {
                 await InitData(_seedDataService);
@@ -150,7 +145,6 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private Task TaskCompleted(ProjectTask task)
         {
-            _lockService.NotifyUserActivity();
             OnPropertyChanged(nameof(HasCompletedTasks));
             return _taskRepository.SaveItemAsync(task);
         }
@@ -158,28 +152,24 @@ namespace PersonaX.UI.PageModels
         [RelayCommand]
         private Task AddTask()
         {
-            _lockService.NotifyUserActivity();
             return Shell.Current.GoToAsync($"task");
         }
 
         [RelayCommand]
         private Task? NavigateToProject(Project project)
         {
-            _lockService.NotifyUserActivity();
             return project is null ? null : Shell.Current.GoToAsync($"project?id={project.ID}");
         }
 
         [RelayCommand]
         private Task NavigateToTask(ProjectTask task)
         {
-            _lockService.NotifyUserActivity();
             return Shell.Current.GoToAsync($"task?id={task.ID}");
         }
 
         [RelayCommand]
         private async Task CleanTasks()
         {
-            _lockService.NotifyUserActivity();
             var completedTasks = Tasks.Where(t => t.IsCompleted).ToList();
             foreach (var task in completedTasks)
             {

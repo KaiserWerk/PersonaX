@@ -2,14 +2,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PersonaX.UI.Data;
 using PersonaX.UI.Models;
-using PersonaX.UI.Services;
-
 namespace PersonaX.UI.PageModels
 {
     public class PeopleListPageModel : ObservableObject
     {
         private readonly PeopleRepository _peopleRepository;
-        private readonly ILockService _lockService;
         private List<Person> _people = [];
         private Person? _selectedPerson;
         private bool _isRefreshing;
@@ -37,10 +34,9 @@ namespace PersonaX.UI.PageModels
         public IAsyncRelayCommand AddPersonCommand { get; }
         public IAsyncRelayCommand<Person> NavigateToPersonCommand { get; }
 
-        public PeopleListPageModel(PeopleRepository peopleRepository, ILockService lockService)
+        public PeopleListPageModel(PeopleRepository peopleRepository)
         {
             _peopleRepository = peopleRepository;
-            _lockService = lockService;
             AppearingCommand = new AsyncRelayCommand(AppearingAsync);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync);
             AddPersonCommand = new AsyncRelayCommand(AddPersonAsync);
@@ -49,13 +45,11 @@ namespace PersonaX.UI.PageModels
 
         private async Task AppearingAsync()
         {
-            _lockService.NotifyUserActivity();
             await LoadPeople();
         }
 
         private async Task RefreshAsync()
         {
-            _lockService.NotifyUserActivity();
             try
             {
                 IsRefreshing = true;
@@ -69,7 +63,6 @@ namespace PersonaX.UI.PageModels
 
         private async Task AddPersonAsync()
         {
-            _lockService.NotifyUserActivity();
             await Shell.Current.GoToAsync("PersonDetail");
         }
 
@@ -78,7 +71,6 @@ namespace PersonaX.UI.PageModels
             if (person == null)
                 return;
 
-            _lockService.NotifyUserActivity();
             await Shell.Current.GoToAsync($"PersonDetail?id={person.ID}");
         }
 

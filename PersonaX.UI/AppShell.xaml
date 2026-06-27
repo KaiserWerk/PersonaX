@@ -8,12 +8,6 @@
     Shell.FlyoutBehavior="Flyout"
     Title="PersonaX.UI">
 
-    <!-- Lock Page (hidden from nav, accessed via route) -->
-    <ShellContent
-        ContentTemplate="{DataTemplate pages:LockPage}"
-        Route="LockPage"
-        Shell.FlyoutItemIsVisible="False" />
-
     <ShellContent
         Title="Dashboard"
         Icon="{StaticResource IconDashboard}"
