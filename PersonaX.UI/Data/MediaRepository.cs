@@ -40,11 +40,9 @@ namespace PersonaX.UI.Data
                     PersonID = reader.GetInt32(1),
                     Type = (MediaType)reader.GetInt32(2),
                     OriginalFileName = reader.GetString(3),
-                    EncryptedFilePath = reader.GetString(4),
+                    FilePath = reader.GetString(4),
                     MimeType = reader.GetString(5),
-                    IV = reader.GetString(6),
-                    Tag = reader.GetString(7),
-                    CreatedAt = DateTime.Parse(reader.GetString(8))
+                    CreatedAt = DateTime.Parse(reader.GetString(6))
                 });
             }
 
@@ -72,11 +70,9 @@ namespace PersonaX.UI.Data
                     PersonID = reader.GetInt32(1),
                     Type = (MediaType)reader.GetInt32(2),
                     OriginalFileName = reader.GetString(3),
-                    EncryptedFilePath = reader.GetString(4),
+                    FilePath = reader.GetString(4),
                     MimeType = reader.GetString(5),
-                    IV = reader.GetString(6),
-                    Tag = reader.GetString(7),
-                    CreatedAt = DateTime.Parse(reader.GetString(8))
+                    CreatedAt = DateTime.Parse(reader.GetString(6))
                 };
             }
 
@@ -97,7 +93,7 @@ namespace PersonaX.UI.Data
                 item.CreatedAt = DateTime.UtcNow;
                 saveCmd.CommandText = @"
                     INSERT INTO MediaItem (PersonID, Type, OriginalFileName, EncryptedFilePath, MimeType, IV, Tag, CreatedAt)
-                    VALUES (@PersonID, @Type, @OriginalFileName, @EncryptedFilePath, @MimeType, @IV, @Tag, @CreatedAt);
+                    VALUES (@PersonID, @Type, @OriginalFileName, @EncryptedFilePath, @MimeType, @CreatedAt);
                     SELECT last_insert_rowid();";
             }
             else
@@ -105,7 +101,7 @@ namespace PersonaX.UI.Data
                 saveCmd.CommandText = @"
                     UPDATE MediaItem
                     SET PersonID = @PersonID, Type = @Type, OriginalFileName = @OriginalFileName,
-                        EncryptedFilePath = @EncryptedFilePath, MimeType = @MimeType, IV = @IV, Tag = @Tag
+                        EncryptedFilePath = @EncryptedFilePath, MimeType = @MimeType
                     WHERE ID = @ID";
                 saveCmd.Parameters.AddWithValue("@ID", item.ID);
             }
@@ -113,10 +109,8 @@ namespace PersonaX.UI.Data
             saveCmd.Parameters.AddWithValue("@PersonID", item.PersonID);
             saveCmd.Parameters.AddWithValue("@Type", (int)item.Type);
             saveCmd.Parameters.AddWithValue("@OriginalFileName", item.OriginalFileName);
-            saveCmd.Parameters.AddWithValue("@EncryptedFilePath", item.EncryptedFilePath);
+            saveCmd.Parameters.AddWithValue("@EncryptedFilePath", item.FilePath);
             saveCmd.Parameters.AddWithValue("@MimeType", item.MimeType);
-            saveCmd.Parameters.AddWithValue("@IV", item.IV);
-            saveCmd.Parameters.AddWithValue("@Tag", item.Tag);
             saveCmd.Parameters.AddWithValue("@CreatedAt", item.CreatedAt.ToString("o"));
 
             var result = await saveCmd.ExecuteScalarAsync();

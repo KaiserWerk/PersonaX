@@ -242,11 +242,9 @@ namespace PersonaX.UI.Data
                     PersonID = reader.GetInt32(1),
                     Type = (MediaType)reader.GetInt32(2),
                     OriginalFileName = reader.GetString(3),
-                    EncryptedFilePath = reader.GetString(4),
+                    FilePath = reader.GetString(4),
                     MimeType = reader.GetString(5),
-                    IV = reader.GetString(6),
-                    Tag = reader.GetString(7),
-                    CreatedAt = DateTime.Parse(reader.GetString(8))
+                    CreatedAt = DateTime.Parse(reader.GetString(6))
                 });
             }
 

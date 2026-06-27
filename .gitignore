@@ -1,3 +1,4 @@
 *.exe
 **/[Bb]in
-**/[Oo]bj.vs
+**/[Oo]bj
+.vs

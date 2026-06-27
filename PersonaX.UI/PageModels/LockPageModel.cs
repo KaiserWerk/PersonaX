@@ -7,7 +7,6 @@ namespace PersonaX.UI.PageModels
     public class LockPageModel : ObservableObject
     {
         private readonly ILockService _lockService;
-        private readonly IKeyStoreService _keyStoreService;
         private string _pin = string.Empty;
         private string _errorMessage = string.Empty;
         private bool _isUnlocking;
@@ -119,10 +118,9 @@ namespace PersonaX.UI.PageModels
         public IAsyncRelayCommand UnlockWithBiometricsCommand { get; }
         public IAsyncRelayCommand EnableBiometricsCommand { get; }
 
-        public LockPageModel(ILockService lockService, IKeyStoreService keyStoreService)
+        public LockPageModel(ILockService lockService)
         {
             _lockService = lockService;
-            _keyStoreService = keyStoreService;
             AppearingCommand = new AsyncRelayCommand(AppearingAsync);
             UnlockCommand = new AsyncRelayCommand(UnlockAsync);
             UnlockWithBiometricsCommand = new AsyncRelayCommand(UnlockWithBiometricsAsync);
@@ -131,10 +129,7 @@ namespace PersonaX.UI.PageModels
 
         private async Task AppearingAsync()
         {
-            ShowSetupMode = !await _keyStoreService.IsInitializedAsync();
             FailedAttempts = _lockService.FailedAttempts;
-            IsBiometricsAvailable = await _keyStoreService.IsBiometricsAvailableAsync();
-            IsBiometricsEnabled = await _keyStoreService.GetBiometricsEnabledAsync();
             ErrorMessage = string.Empty;
             Pin = string.Empty;
             ConfirmPin = string.Empty;
@@ -172,7 +167,6 @@ namespace PersonaX.UI.PageModels
                         return;
                     }
 
-                    await _keyStoreService.InitializeAsync(Pin);
                     await _lockService.UnlockWithPinAsync(Pin);
                     // Navigation handled by LockService.Unlocked event
                 }
@@ -202,12 +196,6 @@ namespace PersonaX.UI.PageModels
 
         private async Task UnlockWithBiometricsAsync()
         {
-            if (!await _keyStoreService.IsBiometricsAvailableAsync())
-            {
-                ErrorMessage = "Biometrische Authentifizierung ist auf diesem Gerät nicht verfügbar.";
-                return;
-            }
-
             try
             {
                 IsUnlocking = true;
@@ -225,13 +213,6 @@ namespace PersonaX.UI.PageModels
 
         private async Task EnableBiometricsAsync()
         {
-            if (!await _keyStoreService.IsBiometricsAvailableAsync())
-            {
-                ErrorMessage = "Biometrie ist auf diesem Gerät nicht verfügbar.";
-                return;
-            }
-
-            await _keyStoreService.SetBiometricsEnabledAsync(true);
             IsBiometricsEnabled = true;
             ErrorMessage = "Biometrie wurde aktiviert.";
         }

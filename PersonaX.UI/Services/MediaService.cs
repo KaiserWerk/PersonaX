@@ -5,14 +5,12 @@ namespace PersonaX.UI.Services
     public partial class MediaService : IMediaService
     {
         private readonly IEncryptionService _encryptionService;
-        private readonly IKeyStoreService _keyStoreService;
         private readonly MediaRepository _mediaRepository;
         private AudioRecordingSession? _audioRecordingSession;
 
-        public MediaService(IEncryptionService encryptionService, IKeyStoreService keyStoreService, MediaRepository mediaRepository)
+        public MediaService(IEncryptionService encryptionService, MediaRepository mediaRepository)
         {
             _encryptionService = encryptionService;
-            _keyStoreService = keyStoreService;
             _mediaRepository = mediaRepository;
         }
 
@@ -60,12 +58,6 @@ namespace PersonaX.UI.Services
 
         public async Task<MediaItem> ImportMediaAsync(int personId, FileResult fileResult, MediaType mediaType, CancellationToken cancellationToken = default)
         {
-            var key = await _keyStoreService.GetFileEncryptionKeyAsync();
-            if (key is null)
-            {
-                throw new InvalidOperationException("Die App ist gesperrt. Kein Dateischlüssel verfügbar.");
-            }
-
             var personMediaDirectory = Path.Combine(Constants.MediaRootPath, personId.ToString());
             Directory.CreateDirectory(personMediaDirectory);
 
@@ -76,18 +68,15 @@ namespace PersonaX.UI.Services
             using var memoryStream = new MemoryStream();
             await inputStream.CopyToAsync(memoryStream, cancellationToken);
 
-            var encrypted = _encryptionService.EncryptAesGcm(memoryStream.ToArray(), key);
-            await File.WriteAllBytesAsync(encryptedFilePath, encrypted.ciphertext, cancellationToken);
+            await File.WriteAllBytesAsync(encryptedFilePath, memoryStream.ToArray(), cancellationToken);
 
-            var mediaItem = new MediaItem
+            var mediaItem = new MediaItem()
             {
                 PersonID = personId,
                 Type = mediaType,
                 OriginalFileName = fileResult.FileName,
-                EncryptedFilePath = Path.GetRelativePath(Constants.MediaRootPath, encryptedFilePath),
+                FilePath = Path.GetRelativePath(Constants.MediaRootPath, encryptedFilePath),
                 MimeType = GetMimeType(fileResult.FileName, mediaType),
-                IV = Convert.ToBase64String(encrypted.iv),
-                Tag = Convert.ToBase64String(encrypted.tag),
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -138,36 +127,14 @@ namespace PersonaX.UI.Services
 
         public async Task<string> CreateDecryptedCopyAsync(MediaItem mediaItem, CancellationToken cancellationToken = default)
         {
-            var key = await _keyStoreService.GetFileEncryptionKeyAsync();
-            if (key is null)
-            {
-                throw new InvalidOperationException("Die App ist gesperrt. Kein Dateischlüssel verfügbar.");
-            }
-
-            var encryptedPath = Path.Combine(Constants.MediaRootPath, mediaItem.EncryptedFilePath);
-            if (!File.Exists(encryptedPath))
-            {
-                throw new FileNotFoundException("Verschlüsselte Mediendatei wurde nicht gefunden.", encryptedPath);
-            }
-
-            var ciphertext = await File.ReadAllBytesAsync(encryptedPath, cancellationToken);
-            var plaintext = _encryptionService.DecryptAesGcm(
-                ciphertext,
-                key,
-                Convert.FromBase64String(mediaItem.IV),
-                Convert.FromBase64String(mediaItem.Tag));
-
-            var tempFileName = $"{Guid.NewGuid():N}{Path.GetExtension(mediaItem.OriginalFileName)}";
-            var tempFilePath = Path.Combine(FileSystem.CacheDirectory, tempFileName);
-            await File.WriteAllBytesAsync(tempFilePath, plaintext, cancellationToken);
-            return tempFilePath;
+            return "";
         }
 
         public async Task DeleteMediaAsync(MediaItem mediaItem, CancellationToken cancellationToken = default)
         {
             await _mediaRepository.DeleteItemAsync(mediaItem);
 
-            var encryptedPath = Path.Combine(Constants.MediaRootPath, mediaItem.EncryptedFilePath);
+            var encryptedPath = Path.Combine(Constants.MediaRootPath, mediaItem.FilePath);
             if (File.Exists(encryptedPath))
             {
                 File.Delete(encryptedPath);
@@ -198,30 +165,18 @@ namespace PersonaX.UI.Services
 
         private async Task<MediaItem> ImportFileAsync(int personId, string filePath, string originalFileName, MediaType mediaType, CancellationToken cancellationToken)
         {
-            var key = await _keyStoreService.GetFileEncryptionKeyAsync();
-            if (key is null)
-            {
-                throw new InvalidOperationException("Die App ist gesperrt. Kein Dateischlüssel verfügbar.");
-            }
-
             var personMediaDirectory = Path.Combine(Constants.MediaRootPath, personId.ToString());
             Directory.CreateDirectory(personMediaDirectory);
 
-            var encryptedFileName = $"{Guid.NewGuid():N}.enc";
-            var encryptedFilePath = Path.Combine(personMediaDirectory, encryptedFileName);
             var bytes = await File.ReadAllBytesAsync(filePath, cancellationToken);
-            var encrypted = _encryptionService.EncryptAesGcm(bytes, key);
-            await File.WriteAllBytesAsync(encryptedFilePath, encrypted.ciphertext, cancellationToken);
 
             var mediaItem = new MediaItem
             {
                 PersonID = personId,
                 Type = mediaType,
                 OriginalFileName = originalFileName,
-                EncryptedFilePath = Path.GetRelativePath(Constants.MediaRootPath, encryptedFilePath),
+                FilePath = Path.GetRelativePath(Constants.MediaRootPath, filePath),
                 MimeType = GetMimeType(originalFileName, mediaType),
-                IV = Convert.ToBase64String(encrypted.iv),
-                Tag = Convert.ToBase64String(encrypted.tag),
                 CreatedAt = DateTime.UtcNow
             };
 

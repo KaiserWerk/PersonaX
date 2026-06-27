@@ -54,7 +54,6 @@ namespace PersonaX.UI
             builder.Services.AddSingleton<ModalErrorHandler>();
 
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
-            builder.Services.AddSingleton<IKeyStoreService, KeyStoreService>();
             builder.Services.AddSingleton<ILockService, LockService>();
             builder.Services.AddSingleton<IMediaService, MediaService>();
             builder.Services.AddSingleton<IExportService, ExportService>();

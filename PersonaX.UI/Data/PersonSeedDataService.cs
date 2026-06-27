@@ -7,18 +7,15 @@ namespace PersonaX.UI.Data
         private readonly PeopleRepository _peopleRepository;
         private readonly MediaRepository _mediaRepository;
         private readonly IEncryptionService _encryptionService;
-        private readonly IKeyStoreService _keyStoreService;
 
         public PersonSeedDataService(
             PeopleRepository peopleRepository,
             MediaRepository mediaRepository,
-            IEncryptionService encryptionService,
-            IKeyStoreService keyStoreService)
+            IEncryptionService encryptionService)
         {
             _peopleRepository = peopleRepository;
             _mediaRepository = mediaRepository;
             _encryptionService = encryptionService;
-            _keyStoreService = keyStoreService;
         }
 
         public async Task SeedDebugDataAsync()
@@ -67,31 +64,23 @@ namespace PersonaX.UI.Data
 #if DEBUG
         private async Task SeedSampleMediaAsync(int personId)
         {
-            var key = await _keyStoreService.GetFileEncryptionKeyAsync();
-            if (key is null)
-            {
-                return;
-            }
-
             var imageBytes = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9sYx0xAAAAAASUVORK5CYII=");
-            var encrypted = _encryptionService.EncryptAesGcm(imageBytes, key);
+ 
 
             var personDirectory = Path.Combine(Constants.MediaRootPath, personId.ToString());
             Directory.CreateDirectory(personDirectory);
 
             var fileName = "seed-photo.enc";
             var fullPath = Path.Combine(personDirectory, fileName);
-            await File.WriteAllBytesAsync(fullPath, encrypted.ciphertext);
+            await File.WriteAllBytesAsync(fullPath, imageBytes);
 
             await _mediaRepository.SaveItemAsync(new MediaItem
             {
                 PersonID = personId,
                 Type = MediaType.Photo,
                 OriginalFileName = "seed-photo.png",
-                EncryptedFilePath = Path.GetRelativePath(Constants.MediaRootPath, fullPath),
+                FilePath = Path.GetRelativePath(Constants.MediaRootPath, fullPath),
                 MimeType = "image/png",
-                IV = Convert.ToBase64String(encrypted.iv),
-                Tag = Convert.ToBase64String(encrypted.tag),
                 CreatedAt = DateTime.UtcNow
             });
         }

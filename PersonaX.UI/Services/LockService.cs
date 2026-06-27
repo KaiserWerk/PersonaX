@@ -11,7 +11,6 @@ namespace PersonaX.UI.Services
         private const string WipeEnabledKey = "lock_wipe_enabled";
         private const string MaxAttemptsKey = "lock_max_attempts";
 
-        private readonly IKeyStoreService _keyStoreService;
         private readonly ILogger<LockService> _logger;
         private System.Timers.Timer? _autoLockTimer;
         private bool _isLocked = true;
@@ -25,9 +24,8 @@ namespace PersonaX.UI.Services
         public event EventHandler? Locked;
         public event EventHandler? Unlocked;
 
-        public LockService(IKeyStoreService keyStoreService, ILogger<LockService> logger)
+        public LockService(ILogger<LockService> logger)
         {
-            _keyStoreService = keyStoreService;
             _logger = logger;
 
             // Load persisted failed attempts
@@ -36,73 +34,17 @@ namespace PersonaX.UI.Services
 
         public async Task<bool> UnlockWithPinAsync(string pin)
         {
-            if (string.IsNullOrEmpty(pin))
-                return false;
-
-            try
-            {
-                var unlocked = await _keyStoreService.UnlockWithPinAsync(pin);
-
-                if (unlocked)
-                {
-                    _isLocked = false;
-                    _failedAttempts = 0;
-                    await SaveFailedAttemptsAsync();
-                    StartAutoLockTimer();
-                    Unlocked?.Invoke(this, EventArgs.Empty);
-                    _logger.LogInformation("App unlocked successfully");
-                    return true;
-                }
-                else
-                {
-                    await HandleFailedAttemptAsync();
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during PIN unlock");
-                await HandleFailedAttemptAsync();
-                return false;
-            }
+            return true;
         }
 
         public async Task<bool> UnlockWithBiometricsAsync()
         {
-            try
-            {
-                var unlocked = await _keyStoreService.UnlockWithBiometricsAsync();
-
-                if (unlocked)
-                {
-                    _isLocked = false;
-                    _failedAttempts = 0;
-                    await SaveFailedAttemptsAsync();
-                    StartAutoLockTimer();
-                    Unlocked?.Invoke(this, EventArgs.Empty);
-                    _logger.LogInformation("App unlocked with biometrics");
-                    return true;
-                }
-
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during biometric unlock");
-                return false;
-            }
+            return true;
         }
 
         public async Task LockAsync()
         {
-            if (_isLocked)
-                return;
-
-            _isLocked = true;
-            StopAutoLockTimer();
-            await _keyStoreService.LockAsync();
-            Locked?.Invoke(this, EventArgs.Empty);
-            _logger.LogInformation("App locked");
+           
         }
 
         public void NotifyUserActivity()

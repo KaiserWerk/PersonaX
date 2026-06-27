@@ -23,22 +23,12 @@ namespace PersonaX.UI.Models
         /// <summary>
         /// Encrypted file path relative to MediaRootPath.
         /// </summary>
-        public string EncryptedFilePath { get; set; } = string.Empty;
+        public string FilePath { get; set; } = string.Empty;
 
         /// <summary>
         /// MIME type of the original media.
         /// </summary>
         public string MimeType { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Initialization vector used for AES-GCM encryption (Base64).
-        /// </summary>
-        public string IV { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Authentication tag for AES-GCM (Base64).
-        /// </summary>
-        public string Tag { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

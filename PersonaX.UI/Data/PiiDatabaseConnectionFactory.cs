@@ -7,52 +7,20 @@ namespace PersonaX.UI.Data
     /// </summary>
     public class PiiDatabaseConnectionFactory
     {
-        private readonly IKeyStoreService _keyStoreService;
         private bool _isInitialized = false;
 
-        public PiiDatabaseConnectionFactory(IKeyStoreService keyStoreService)
-        {
-            _keyStoreService = keyStoreService;
-        }
+        public PiiDatabaseConnectionFactory()
+        {}
 
         /// <summary>
         /// Creates and opens a new SQLCipher connection using the database password from KeyStoreService.
         /// </summary>
         public async Task<SqliteConnection> CreateConnectionAsync()
         {
-            // Ensure database password is available
-            var dbPassword = await _keyStoreService.GetDatabasePasswordAsync();
-            if (string.IsNullOrEmpty(dbPassword))
-            {
-                throw new InvalidOperationException("Database password not available. User must unlock the app first.");
-            }
-
             var connectionString = $"Data Source={Constants.PiiDatabasePath}";
             var connection = new SqliteConnection(connectionString);
 
             await connection.OpenAsync();
-
-            // Set SQLCipher key (password) using PRAGMA
-            using (var cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = $"PRAGMA key = '{dbPassword}';";
-                await cmd.ExecuteNonQueryAsync();
-            }
-
-            // Verify the key is correct by running a simple query
-            try
-            {
-                using (var cmd = connection.CreateCommand())
-                {
-                    cmd.CommandText = "PRAGMA cipher_version;";
-                    await cmd.ExecuteScalarAsync();
-                }
-            }
-            catch (SqliteException)
-            {
-                await connection.DisposeAsync();
-                throw new InvalidOperationException("Invalid database password or corrupted database.");
-            }
 
             return connection;
         }
